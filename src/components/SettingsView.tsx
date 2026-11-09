@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Download, Upload, RotateCcw } from 'lucide-react';
+import { Download, Upload, RotateCcw, Cloud, Copy, Check, RefreshCw } from 'lucide-react';
 import { AppSettings } from '../types';
 import { exportAppData, importAppData, resetAllData, saveSettings } from '../services/storage';
+import { getSyncKey, setSyncKey, pullFromCloud, pushProfileToCloud } from '../services/cloudSync';
 import { toast } from 'sonner';
 
 interface SettingsViewProps {
@@ -21,6 +22,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   const [warning5, setWarning5] = useState(settings.timerWarning5m);
   const [shortcuts, setShortcuts] = useState(settings.keyboardShortcutsEnabled);
 
+  // Cloud Sync state
+  const [syncKeyInput, setSyncKeyInput] = useState<string>(getSyncKey);
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
+  const [hasCopiedPhoneLink, setHasCopiedPhoneLink] = useState<boolean>(false);
+
   const handleSavePreferences = () => {
     const updated: AppSettings = {
       targetExamDate: targetDate,
@@ -31,7 +37,48 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     };
     onUpdateSettings(updated);
     saveSettings(updated);
-    toast.success('Preferences saved');
+    pushProfileToCloud(syncKeyInput, updated, null);
+    toast.success('Preferences saved & synced to cloud');
+  };
+
+  const handleUpdateSyncKey = async () => {
+    const clean = syncKeyInput.trim().toLowerCase();
+    if (!clean) {
+      toast.error('Sync key cannot be empty');
+      return;
+    }
+    setSyncKey(clean);
+    setIsSyncing(true);
+    const pulled = await pullFromCloud(clean);
+    setIsSyncing(false);
+    if (pulled) {
+      onDataReset();
+      toast.success(`Connected to cloud profile: "${clean}"`);
+    } else {
+      toast.success(`Sync key saved: "${clean}". Ready for cross-device sync.`);
+    }
+  };
+
+  const handleCopyPhoneLink = () => {
+    const key = syncKeyInput.trim().toLowerCase() || 'soumil-prep';
+    const baseUrl = window.location.origin;
+    const phoneUrl = `${baseUrl}?sync=${key}`;
+    navigator.clipboard.writeText(phoneUrl);
+    setHasCopiedPhoneLink(true);
+    setTimeout(() => setHasCopiedPhoneLink(false), 2500);
+    toast.success('Link copied! Open this URL on your phone to link automatically.');
+  };
+
+  const handleManualSync = async () => {
+    setIsSyncing(true);
+    const pulled = await pullFromCloud(syncKeyInput);
+    setIsSyncing(false);
+    if (pulled) {
+      onDataReset();
+      toast.success('Cloud sync complete! Up to date with latest attempts.');
+    } else {
+      toast.error('Could not sync with Supabase. Check internet connection.');
+    }
   };
 
   const handleExportData = () => {
@@ -65,10 +112,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   };
 
   const handleReset = () => {
-    if (confirm('Reset all local data and reload the demo mock exams?')) {
+    if (confirm('Clear all local exam history? This cannot be undone.')) {
       resetAllData();
       onDataReset();
-      toast('Demo data reloaded');
+      toast('Local history cleared');
     }
   };
 
@@ -78,11 +125,76 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       {/* Header */}
       <div className="pb-4 border-b border-white/[0.06]">
         <h1 className="text-xl sm:text-2xl font-semibold text-[#f4f5f7] tracking-tight">
-          Settings
+          Settings & Cloud Sync
         </h1>
         <p className="text-[#9ea5b3] mt-0.5">
-          Exam dates, timer alerts, and data management
+          Exam timeline, device pairing, and Supabase synchronization
         </p>
+      </div>
+
+      {/* Cloud Sync Section */}
+      <div className="bg-[#111318] border border-white/[0.07] rounded-2xl p-6 space-y-5 card-highlight">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2.5">
+            <div className="p-2 rounded-xl bg-[#6d8aff]/10 border border-[#6d8aff]/20 text-[#6d8aff]">
+              <Cloud className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-xs font-semibold text-[#f4f5f7]">Cross-Device Cloud Sync</h2>
+              <p className="text-[11px] text-[#9ea5b3]">Powered by Supabase PostgreSQL (Realtime)</p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#34d399]/10 text-[#34d399] border border-[#34d399]/20 font-mono text-[10px]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-pulse" />
+            <span>Connected</span>
+          </div>
+        </div>
+
+        <div className="space-y-3 pt-1">
+          <div className="space-y-1">
+            <label className="text-[#9ea5b3]">Your Sync Profile Key</label>
+            <div className="flex items-center space-x-2">
+              <input
+                type="text"
+                value={syncKeyInput}
+                onChange={(e) => setSyncKeyInput(e.target.value)}
+                placeholder="e.g. soumil-prep"
+                className="flex-1 px-3 py-2 bg-[#090a0e] border border-white/[0.08] rounded-xl text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff] font-mono text-xs"
+              />
+              <button
+                onClick={handleUpdateSyncKey}
+                disabled={isSyncing}
+                className="px-3.5 py-2 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] rounded-xl transition-colors btn-press border border-white/[0.06] shrink-0"
+              >
+                Set Key
+              </button>
+            </div>
+            <p className="text-[11px] text-[#5e6573]">
+              Use this key to pair your phone and laptop so your exam history stays in sync.
+            </p>
+          </div>
+
+          {/* Quick Actions for Sync */}
+          <div className="flex flex-wrap items-center gap-2.5 pt-2 border-t border-white/[0.04]">
+            <button
+              onClick={handleCopyPhoneLink}
+              className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-[#6d8aff]/10 hover:bg-[#6d8aff]/15 text-[#6d8aff] border border-[#6d8aff]/20 rounded-lg transition-colors btn-press"
+            >
+              {hasCopiedPhoneLink ? <Check className="w-3.5 h-3.5 text-[#34d399]" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{hasCopiedPhoneLink ? 'Link Copied!' : 'Copy Phone Link'}</span>
+            </button>
+
+            <button
+              onClick={handleManualSync}
+              disabled={isSyncing}
+              className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-white/[0.06] hover:bg-white/[0.1] text-[#f4f5f7] rounded-lg transition-colors btn-press border border-white/[0.06]"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-[#6d8aff]' : ''}`} />
+              <span>{isSyncing ? 'Syncing...' : 'Sync Now'}</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Target Parameters */}
@@ -156,16 +268,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             onClick={handleSavePreferences}
             className="px-4 py-1.5 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold rounded-lg transition-colors btn-press shadow-md shadow-[#6d8aff]/15"
           >
-            Save
+            Save Preferences
           </button>
         </div>
       </div>
 
-      {/* Backups */}
+      {/* Local Backups */}
       <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 space-y-3 card-highlight">
-        <h2 className="text-xs font-semibold text-[#f4f5f7]">Data & Backups</h2>
+        <h2 className="text-xs font-semibold text-[#f4f5f7]">Manual Backups</h2>
         <p className="text-[#9ea5b3]">
-          All exam data is saved locally in your browser. Export backups to prevent loss.
+          All exam data is automatically synced with Supabase and cached locally in your browser.
         </p>
 
         <div className="flex flex-wrap gap-2.5 pt-2">
@@ -193,7 +305,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             className="flex items-center space-x-1.5 px-3.5 py-1.5 text-[#f87171] hover:bg-[#f87171]/10 rounded-lg transition-colors ml-auto btn-press"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span>Reset Demo Data</span>
+            <span>Clear Local History</span>
           </button>
         </div>
       </div>

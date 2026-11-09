@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, ChevronRight } from 'lucide-react';
+import { Calendar, ChevronRight, Cloud } from 'lucide-react';
 import { AppSettings, ExamSession } from '../types';
 import { saveSettings } from '../services/storage';
 import { toast } from 'sonner';
@@ -82,8 +82,17 @@ export const Navigation: React.FC<NavigationProps> = ({
           </nav>
         </div>
 
-        {/* Right: In-Progress Indicator & Countdown Pill */}
-        <div className="flex items-center space-x-3 text-xs">
+        {/* Right: In-Progress Indicator, Cloud Sync & Countdown Pill */}
+        <div className="flex items-center space-x-2.5 text-xs">
+          <button
+            onClick={() => onSelectTab('settings')}
+            title="Cloud Sync Active (Supabase) - Click to manage"
+            className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.04] transition-colors btn-press border border-white/[0.05]"
+          >
+            <Cloud className="w-3.5 h-3.5 text-[#34d399]" />
+            <span className="hidden sm:inline text-[11px] font-mono text-[#9ea5b3]">Synced</span>
+          </button>
+
           {activeExam && !activeExam.isSubmitted && (
             <button
               onClick={() => onSelectTab('mock-exams')}

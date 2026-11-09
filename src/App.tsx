@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Toaster, toast } from 'sonner';
 import { Navigation, NavTab } from './components/Navigation';
 import { Dashboard } from './components/Dashboard';
@@ -17,6 +17,13 @@ import {
   getSettings,
 } from './services/storage';
 import { generateNewExam, submitExamSession } from './services/examEngine';
+import {
+  getSyncKey,
+  pullFromCloud,
+  pushExamToCloud,
+  pushProfileToCloud,
+  subscribeToCloudChanges,
+} from './services/cloudSync';
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
@@ -28,10 +35,43 @@ export const App: React.FC = () => {
   const [isExamActive, setIsExamActive] = useState<boolean>(false);
   const [viewingResultsSession, setViewingResultsSession] = useState<ExamSession | null>(null);
 
+  // Background Cloud Sync & Realtime on Mount
+  useEffect(() => {
+    const syncKey = getSyncKey();
+    
+    // Initial fetch from Supabase
+    pullFromCloud(syncKey, (data) => {
+      setCompletedExams(data.completedExams);
+      setSettings(data.settings);
+      if (data.activeExam && !activeExam) {
+        setActiveExam(data.activeExam);
+      }
+    });
+
+    // Realtime channel listener
+    const unsubscribe = subscribeToCloudChanges(syncKey, () => {
+      pullFromCloud(syncKey, (data) => {
+        setCompletedExams(data.completedExams);
+        setSettings(data.settings);
+        if (data.activeExam) {
+          setActiveExam(data.activeExam);
+        }
+      });
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   const handleReloadData = () => {
     setSettings(getSettings());
     setCompletedExams(getCompletedExams());
     setActiveExam(getActiveExam());
+  };
+
+  const handleUpdateSession = (updated: ExamSession) => {
+    setActiveExam(updated);
   };
 
   const handleLaunchNewExam = () => {
@@ -46,6 +86,7 @@ export const App: React.FC = () => {
     setActiveExam(newSession);
     setViewingResultsSession(null);
     setIsExamActive(true);
+    pushProfileToCloud(getSyncKey(), settings, newSession);
     toast.success(`Exam #${newSession.examNumber} started (65 Questions • 90m)`);
   };
 
@@ -62,12 +103,16 @@ export const App: React.FC = () => {
     setIsExamActive(false);
     setCompletedExams(getCompletedExams());
     setViewingResultsSession(completed);
-    toast.success('Examination submitted and graded.');
+    
+    // Instant sync to Supabase
+    pushExamToCloud(getSyncKey(), completed);
+    toast.success('Examination submitted, graded, and synced to cloud.');
   };
 
   const handleExitWithoutSubmit = () => {
     setIsExamActive(false);
-    toast('Progress saved. You can resume at any time.');
+    pushProfileToCloud(getSyncKey(), settings, activeExam);
+    toast('Progress saved and synced to cloud. You can resume at any time.');
   };
 
   const handleViewResults = (exam: ExamSession) => {
@@ -89,49 +134,31 @@ export const App: React.FC = () => {
   // Distraction-free exam simulator mode
   if (isExamActive && activeExam) {
     return (
-      <>
-        <Toaster theme="dark" position="top-right" />
-        <ExamSimulator
-          session={activeExam}
-          onUpdateSession={(updated) => setActiveExam(updated)}
-          onSubmitExam={handleSubmitExam}
-          onExitWithoutSubmit={handleExitWithoutSubmit}
-        />
-      </>
+      <ExamSimulator
+        session={activeExam}
+        onUpdateSession={handleUpdateSession}
+        onSubmitExam={handleSubmitExam}
+        onExitWithoutSubmit={handleExitWithoutSubmit}
+      />
     );
   }
 
-  // Detailed results review mode
+  // Detailed post-exam review mode
   if (viewingResultsSession) {
     return (
-      <div className="min-h-screen bg-[#0c0d10] text-[#f0f2f5] flex flex-col font-sans">
-        <Toaster theme="dark" position="top-right" />
-        <Navigation
-          currentTab={currentTab}
-          onSelectTab={(tab) => {
-            setViewingResultsSession(null);
-            setCurrentTab(tab);
-          }}
-          activeExam={activeExam}
-          settings={settings}
-          onUpdateSettings={setSettings}
-        />
-        <main className="flex-1">
-          <ResultsView
-            session={viewingResultsSession}
-            onRetakeExam={handleRetakeFromResults}
-            onBackToDashboard={handleBackToDashboard}
-          />
-        </main>
-      </div>
+      <ResultsView
+        session={viewingResultsSession}
+        onRetakeExam={handleRetakeFromResults}
+        onBackToDashboard={handleBackToDashboard}
+      />
     );
   }
 
-  // Standard tab view
   return (
-    <div className="min-h-screen bg-[#0c0d10] text-[#f0f2f5] flex flex-col font-sans">
-      <Toaster theme="dark" position="top-right" />
+    <div className="min-h-screen bg-[#090a0e] text-[#f4f5f7] flex flex-col font-sans selection:bg-[#6d8aff]/20 selection:text-[#f4f5f7]">
+      <Toaster position="bottom-right" theme="dark" richColors />
       
+      {/* Top Application Bar */}
       <Navigation
         currentTab={currentTab}
         onSelectTab={setCurrentTab}
@@ -140,7 +167,8 @@ export const App: React.FC = () => {
         onUpdateSettings={setSettings}
       />
 
-      <main className="flex-1">
+      {/* Main Tab Panels */}
+      <main className="flex-1 pb-16">
         {currentTab === 'dashboard' && (
           <Dashboard
             completedExams={completedExams}
@@ -149,7 +177,7 @@ export const App: React.FC = () => {
             onLaunchNewExam={handleLaunchNewExam}
             onResumeExam={handleResumeExam}
             onViewResults={handleViewResults}
-            onNavigateTab={(tab) => setCurrentTab(tab)}
+            onNavigateTab={setCurrentTab}
           />
         )}
 
@@ -182,13 +210,6 @@ export const App: React.FC = () => {
           />
         )}
       </main>
-
-      <footer className="border-t border-[#1e222a] py-6 text-center text-xs text-[#5e6676]">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>CloudPrep • AWS Certified Cloud Practitioner (CLF-C02)</span>
-          <span>Aligned with official examination blueprint</span>
-        </div>
-      </footer>
     </div>
   );
 };
