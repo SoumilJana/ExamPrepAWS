@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #090a0e;
+  --color-surface: #111318;
+  --color-surface-elevated: #181a21;
+  --color-surface-hover: #1e212b;
+  
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-border-base: rgba(255, 255, 255, 0.08);
+  --color-border-active: rgba(255, 255, 255, 0.16);
+
+  --color-text-primary: #f4f5f7;
+  --color-text-secondary: #9ea5b3;
+  --color-text-muted: #5e6573;
+
+  --color-accent: #6d8aff;
+  --color-accent-hover: #839cff;
+  
+  --color-status-success: #34d399;
+  --color-status-warning: #fbbf24;
+  --color-status-error: #f87171;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #090a0e;
+  color: #f4f5f7;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular figures for clocks, percentages, and counters */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle physical top highlight on cards (Apple / Linear-style depth) */
+.card-highlight {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+.card-highlight-elevated {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 12px 32px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* Subtle premium glow on active elements */
+.glow-accent {
+  box-shadow: 0 0 24px -4px rgba(109, 138, 255, 0.18);
+}
+
+.glow-success {
+  box-shadow: 0 0 24px -4px rgba(52, 211, 153, 0.15);
+}
+
+/* Micro-physics press effect */
+.btn-press {
+  transition: transform 120ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.btn-press:active {
+  transform: scale(0.98);
+}
+
+/* Precision scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Subtle focus ring */
+*:focus-visible {
+  outline: 2px solid #6d8aff;
+  outline-offset: 2px;
+}
