@@ -178,10 +178,25 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
               className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 sm:p-6 space-y-4 card-highlight"
             >
               <div className="flex items-center justify-between text-xs text-[#9ea5b3]">
-                <div className="flex items-center space-x-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="font-mono text-[#f4f5f7]">Q{originalIndex + 1}</span>
                   <span className="text-white/20">•</span>
                   <span>{domain.name}</span>
+                  {q.tags && q.tags.length > 0 && (
+                    <>
+                      <span className="text-white/20">•</span>
+                      <div className="flex flex-wrap gap-1">
+                        {q.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-1.5 py-0.5 rounded text-[10px] bg-white/[0.04] text-[#9ea5b3] border border-white/[0.06]"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex items-center space-x-3">

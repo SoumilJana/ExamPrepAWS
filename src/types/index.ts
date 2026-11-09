@@ -25,6 +25,7 @@ export interface Question {
   explanation: string;
   awsReference?: string;
   source?: string;
+  tags?: string[];
   timesSeen?: number;
   timesCorrect?: number;
 }

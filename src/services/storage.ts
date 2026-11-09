@@ -17,70 +17,6 @@ export const DEFAULT_SETTINGS: AppSettings = {
   keyboardShortcutsEnabled: true,
 };
 
-// Seed 3 realistic past exam sessions so the demo immediately showcases realistic analytics
-export const SAMPLE_COMPLETED_EXAMS: ExamSession[] = [
-  {
-    id: 'exam-sample-1',
-    examNumber: 1,
-    seed: 1001,
-    questions: INITIAL_QUESTIONS,
-    answers: Object.fromEntries(
-      INITIAL_QUESTIONS.map((q, idx) => [q.id, idx % 5 === 0 ? ['B'] : q.correctOptionIds])
-    ),
-    flaggedQuestionIds: ['Q-004', 'Q-018', 'Q-033'],
-    currentQuestionIndex: 64,
-    startTime: Date.now() - 5 * 24 * 60 * 60 * 1000,
-    durationMinutes: 90,
-    isSubmitted: true,
-    submittedAt: Date.now() - 5 * 24 * 60 * 60 * 1000 + 64 * 60 * 1000,
-    result: {
-      totalQuestions: 65,
-      correctAnswers: 52,
-      incorrectAnswers: 13,
-      unansweredQuestions: 0,
-      percentage: 80.0,
-      passed: true,
-      timeSpentSeconds: 64 * 60,
-      domainScores: [
-        { domainId: 'domain-1', domainName: 'Cloud Concepts', weight: 24, correct: 14, total: 16, percentage: 87.5 },
-        { domainId: 'domain-2', domainName: 'Security and Compliance', weight: 30, correct: 15, total: 20, percentage: 75.0 },
-        { domainId: 'domain-3', domainName: 'Cloud Technology and Services', weight: 34, correct: 17, total: 22, percentage: 77.3 },
-        { domainId: 'domain-4', domainName: 'Billing, Pricing and Support', weight: 12, correct: 6, total: 7, percentage: 85.7 },
-      ],
-    },
-  },
-  {
-    id: 'exam-sample-2',
-    examNumber: 2,
-    seed: 1002,
-    questions: INITIAL_QUESTIONS,
-    answers: Object.fromEntries(
-      INITIAL_QUESTIONS.map((q, idx) => [q.id, idx % 7 === 0 ? ['C'] : q.correctOptionIds])
-    ),
-    flaggedQuestionIds: ['Q-012', 'Q-022', 'Q-045'],
-    currentQuestionIndex: 64,
-    startTime: Date.now() - 2 * 24 * 60 * 60 * 1000,
-    durationMinutes: 90,
-    isSubmitted: true,
-    submittedAt: Date.now() - 2 * 24 * 60 * 60 * 1000 + 71 * 60 * 1000,
-    result: {
-      totalQuestions: 65,
-      correctAnswers: 55,
-      incorrectAnswers: 9,
-      unansweredQuestions: 1,
-      percentage: 84.6,
-      passed: true,
-      timeSpentSeconds: 71 * 60,
-      domainScores: [
-        { domainId: 'domain-1', domainName: 'Cloud Concepts', weight: 24, correct: 15, total: 16, percentage: 93.8 },
-        { domainId: 'domain-2', domainName: 'Security and Compliance', weight: 30, correct: 16, total: 20, percentage: 80.0 },
-        { domainId: 'domain-3', domainName: 'Cloud Technology and Services', weight: 34, correct: 18, total: 22, percentage: 81.8 },
-        { domainId: 'domain-4', domainName: 'Billing, Pricing and Support', weight: 12, correct: 6, total: 7, percentage: 85.7 },
-      ],
-    },
-  },
-];
-
 export const getSettings = (): AppSettings => {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.SETTINGS);
@@ -98,13 +34,17 @@ export const getCompletedExams = (): ExamSession[] => {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.COMPLETED_EXAMS);
     if (!raw) {
-      // Initialize with sample exams on first load
-      localStorage.setItem(STORAGE_KEYS.COMPLETED_EXAMS, JSON.stringify(SAMPLE_COMPLETED_EXAMS));
-      return SAMPLE_COMPLETED_EXAMS;
+      return [];
     }
-    return JSON.parse(raw);
+    const parsed: ExamSession[] = JSON.parse(raw);
+    // Purge any legacy demo exam records
+    const cleaned = parsed.filter((e) => !e.id.startsWith('exam-sample-'));
+    if (cleaned.length !== parsed.length) {
+      localStorage.setItem(STORAGE_KEYS.COMPLETED_EXAMS, JSON.stringify(cleaned));
+    }
+    return cleaned;
   } catch {
-    return SAMPLE_COMPLETED_EXAMS;
+    return [];
   }
 };
 
@@ -138,7 +78,13 @@ export const getQuestionBank = (): Question[] => {
       localStorage.setItem(STORAGE_KEYS.QUESTION_BANK, JSON.stringify(INITIAL_QUESTIONS));
       return INITIAL_QUESTIONS;
     }
-    return JSON.parse(raw);
+    const parsed: Question[] = JSON.parse(raw);
+    // If cached question count is old (less than 1000), upgrade to full 1050 bank
+    if (!Array.isArray(parsed) || parsed.length < 1000) {
+      localStorage.setItem(STORAGE_KEYS.QUESTION_BANK, JSON.stringify(INITIAL_QUESTIONS));
+      return INITIAL_QUESTIONS;
+    }
+    return parsed;
   } catch {
     return INITIAL_QUESTIONS;
   }
