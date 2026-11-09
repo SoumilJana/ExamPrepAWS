@@ -4,12 +4,13 @@ import { AppSettings, ExamSession } from '../types';
 import { saveSettings } from '../services/storage';
 import { toast } from 'sonner';
 
-export type NavTab = 'dashboard' | 'mock-exams' | 'question-bank' | 'performance' | 'settings';
+export type NavTab = 'dashboard' | 'mock-exams' | 'mistake-vault' | 'question-bank' | 'performance' | 'settings';
 
 interface NavigationProps {
   currentTab: NavTab;
   onSelectTab: (tab: NavTab) => void;
   activeExam: ExamSession | null;
+  activeMistakeCount?: number;
   settings: AppSettings;
   onUpdateSettings: (newSettings: AppSettings) => void;
 }
@@ -18,6 +19,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   currentTab,
   onSelectTab,
   activeExam,
+  activeMistakeCount = 0,
   settings,
   onUpdateSettings,
 }) => {
@@ -36,9 +38,10 @@ export const Navigation: React.FC<NavigationProps> = ({
     toast.success('Certification exam date saved');
   };
 
-  const navItems: { id: NavTab; label: string }[] = [
+  const navItems: { id: NavTab; label: string; badge?: number }[] = [
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'mock-exams', label: 'Mock Exams' },
+    { id: 'mistake-vault', label: 'Mistake Vault', badge: activeMistakeCount },
     { id: 'question-bank', label: 'Question Bank' },
     { id: 'performance', label: 'Performance' },
     { id: 'settings', label: 'Settings' },
@@ -69,13 +72,18 @@ export const Navigation: React.FC<NavigationProps> = ({
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`px-3 py-1.5 rounded-md transition-all duration-150 btn-press ${
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md transition-all duration-150 btn-press ${
                     isActive
                       ? 'text-[#f4f5f7] font-medium bg-white/[0.06]'
                       : 'text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.03]'
                   }`}
                 >
-                  {item.label}
+                  <span>{item.label}</span>
+                  {item.badge !== undefined && item.badge > 0 && (
+                    <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-[#f87171]/20 text-[#f87171] font-semibold border border-[#f87171]/30">
+                      {item.badge}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -151,11 +159,14 @@ export const Navigation: React.FC<NavigationProps> = ({
           <button
             key={item.id}
             onClick={() => onSelectTab(item.id)}
-            className={`py-1 px-2.5 rounded ${
+            className={`py-1 px-2 rounded flex items-center space-x-1 ${
               currentTab === item.id ? 'text-[#f4f5f7] font-semibold bg-white/[0.06]' : 'text-[#9ea5b3]'
             }`}
           >
-            {item.label}
+            <span>{item.label}</span>
+            {item.badge !== undefined && item.badge > 0 && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#f87171]" />
+            )}
           </button>
         ))}
       </div>

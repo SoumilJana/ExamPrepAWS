@@ -7,16 +7,18 @@ import { AWS_DOMAINS, PASSING_PERCENTAGE } from '../data/domains';
 interface DashboardProps {
   completedExams: ExamSession[];
   activeExam: ExamSession | null;
+  activeMistakesCount?: number;
   settings: AppSettings;
   onLaunchNewExam: () => void;
   onResumeExam: () => void;
   onViewResults: (exam: ExamSession) => void;
-  onNavigateTab: (tab: 'mock-exams' | 'question-bank' | 'performance') => void;
+  onNavigateTab: (tab: any) => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
   completedExams,
   activeExam,
+  activeMistakesCount = 0,
   settings,
   onLaunchNewExam,
   onResumeExam,
@@ -229,6 +231,32 @@ export const Dashboard: React.FC<DashboardProps> = ({
           ))}
         </div>
       </section>
+
+      {/* Mistake Vault Spaced Repetition Callout */}
+      {activeMistakesCount > 0 && (
+        <section className="bg-[#111318] border border-[#f87171]/25 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 card-highlight">
+          <div className="flex items-start space-x-3.5">
+            <div className="p-2.5 rounded-xl bg-[#f87171]/10 text-[#f87171] shrink-0 mt-0.5 border border-[#f87171]/20">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-[#f4f5f7]">
+                {activeMistakesCount} {activeMistakesCount === 1 ? 'question' : 'questions'} quarantined in your Mistake Vault
+              </div>
+              <p className="text-[11px] text-[#9ea5b3] mt-0.5">
+                Targeted spaced repetition. Answer each correctly twice in a row to graduate them.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => onNavigateTab('mistake-vault')}
+            className="px-4 py-2 bg-[#f87171]/15 hover:bg-[#f87171]/25 text-[#f87171] border border-[#f87171]/30 font-semibold text-xs rounded-xl transition-colors btn-press shrink-0 flex items-center space-x-1.5"
+          >
+            <span>Review & Drill Mistakes</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </section>
+      )}
 
       {/* Recent Examinations Archive */}
       <section className="space-y-4">

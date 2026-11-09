@@ -80,3 +80,14 @@ export interface ReadinessBreakdown {
   questionBankCoverage: number;
   status: 'Ready' | 'Almost Ready' | 'Needs Practice';
 }
+
+export interface MistakeRecord {
+  questionId: string;
+  consecutiveCorrect: number; // target: 2 for graduation
+  totalIncorrect: number;
+  lastAttemptedAt: number;
+  lastSelectedOptions?: string[];
+}
+
+export type MistakeVault = Record<string, MistakeRecord>;
+

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Toaster, toast } from 'sonner';
 import { Navigation, NavTab } from './components/Navigation';
 import { Dashboard } from './components/Dashboard';
@@ -8,8 +8,10 @@ import { ResultsView } from './components/ResultsView';
 import { QuestionBankView } from './components/QuestionBankView';
 import { PerformanceView } from './components/PerformanceView';
 import { SettingsView } from './components/SettingsView';
+import { MistakeVaultView } from './components/MistakeVaultView';
+import { MistakeDrillSimulator } from './components/MistakeDrillSimulator';
 
-import { AppSettings, ExamSession } from './types';
+import { AppSettings, ExamSession, MistakeVault, Question } from './types';
 import {
   getActiveExam,
   getCompletedExams,
@@ -24,16 +26,24 @@ import {
   pushProfileToCloud,
   subscribeToCloudChanges,
 } from './services/cloudSync';
+import { getMistakeVault, recordExamMistakes } from './services/mistakeVault';
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
   const [settings, setSettings] = useState<AppSettings>(getSettings);
   const [completedExams, setCompletedExams] = useState<ExamSession[]>(getCompletedExams);
   const [activeExam, setActiveExam] = useState<ExamSession | null>(getActiveExam);
+  const [mistakeVault, setMistakeVault] = useState<MistakeVault>(getMistakeVault);
   
   // Screen routing states
   const [isExamActive, setIsExamActive] = useState<boolean>(false);
+  const [activeDrillQuestions, setActiveDrillQuestions] = useState<Question[] | null>(null);
   const [viewingResultsSession, setViewingResultsSession] = useState<ExamSession | null>(null);
+
+  // Active mistakes needing mastery (streak < 2)
+  const activeMistakeCount = useMemo(() => {
+    return Object.values(mistakeVault).filter((r) => r.consecutiveCorrect < 2).length;
+  }, [mistakeVault]);
 
   // Background Cloud Sync & Realtime on Mount
   useEffect(() => {
@@ -46,6 +56,7 @@ export const App: React.FC = () => {
       if (data.activeExam && !activeExam) {
         setActiveExam(data.activeExam);
       }
+      setMistakeVault(getMistakeVault());
     });
 
     // Realtime channel listener
@@ -56,6 +67,7 @@ export const App: React.FC = () => {
         if (data.activeExam) {
           setActiveExam(data.activeExam);
         }
+        setMistakeVault(getMistakeVault());
       });
     });
 
@@ -68,6 +80,7 @@ export const App: React.FC = () => {
     setSettings(getSettings());
     setCompletedExams(getCompletedExams());
     setActiveExam(getActiveExam());
+    setMistakeVault(getMistakeVault());
   };
 
   const handleUpdateSession = (updated: ExamSession) => {
@@ -104,6 +117,10 @@ export const App: React.FC = () => {
     setCompletedExams(getCompletedExams());
     setViewingResultsSession(completed);
     
+    // Automatically record mistakes into the Mistake Vault
+    const updatedVault = recordExamMistakes(completed);
+    setMistakeVault({ ...updatedVault });
+
     // Instant sync to Supabase
     pushExamToCloud(getSyncKey(), completed);
     toast.success('Examination submitted, graded, and synced to cloud.');
@@ -143,6 +160,17 @@ export const App: React.FC = () => {
     );
   }
 
+  // Active Mistake Drill mode (Tutor / Spaced Repetition)
+  if (activeDrillQuestions) {
+    return (
+      <MistakeDrillSimulator
+        questions={activeDrillQuestions}
+        onExitDrill={() => setActiveDrillQuestions(null)}
+        onDrillComplete={() => setMistakeVault(getMistakeVault())}
+      />
+    );
+  }
+
   // Detailed post-exam review mode
   if (viewingResultsSession) {
     return (
@@ -163,6 +191,7 @@ export const App: React.FC = () => {
         currentTab={currentTab}
         onSelectTab={setCurrentTab}
         activeExam={activeExam}
+        activeMistakeCount={activeMistakeCount}
         settings={settings}
         onUpdateSettings={setSettings}
       />
@@ -173,6 +202,7 @@ export const App: React.FC = () => {
           <Dashboard
             completedExams={completedExams}
             activeExam={activeExam}
+            activeMistakesCount={activeMistakeCount}
             settings={settings}
             onLaunchNewExam={handleLaunchNewExam}
             onResumeExam={handleResumeExam}
@@ -188,6 +218,15 @@ export const App: React.FC = () => {
             onLaunchNewExam={handleLaunchNewExam}
             onResumeExam={handleResumeExam}
             onViewResults={handleViewResults}
+          />
+        )}
+
+        {currentTab === 'mistake-vault' && (
+          <MistakeVaultView
+            vault={mistakeVault}
+            allQuestions={questionBank}
+            onStartDrill={(drillQs) => setActiveDrillQuestions(drillQs)}
+            onNavigateTab={setCurrentTab}
           />
         )}
 
