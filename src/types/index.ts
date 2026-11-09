@@ -54,12 +54,15 @@ export interface ExamSession {
   id: string;
   examNumber: number;
   seed: number;
+  title?: string;
+  isSprint?: boolean;
+  sprintCategory?: string;
   questions: Question[];
   answers: Record<string, string[]>; // questionId -> selectedOptionIds
   flaggedQuestionIds: string[];
   currentQuestionIndex: number;
   startTime: number; // timestamp ms
-  durationMinutes: number; // 90
+  durationMinutes: number; // 90 or proportional for sprints
   isSubmitted: boolean;
   submittedAt?: number;
   result?: ExamResult;

@@ -159,7 +159,7 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
           </button>
           <span className="text-white/10">|</span>
           <span className="text-[#9ea5b3] font-medium">
-            Exam #{session.examNumber}
+            {session.title || `Exam #${session.examNumber}`}
           </span>
         </div>
 
@@ -168,7 +168,7 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
           <span>Question</span>
           <span className="font-mono text-[#6d8aff] font-semibold">{currentQIndex + 1}</span>
           <span className="text-[#5e6573]">/</span>
-          <span className="font-mono text-[#9ea5b3]">65</span>
+          <span className="font-mono text-[#9ea5b3]">{session.questions.length}</span>
         </div>
 
         {/* Timer & Finish */}

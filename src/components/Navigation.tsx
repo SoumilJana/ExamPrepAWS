@@ -4,7 +4,7 @@ import { AppSettings, ExamSession } from '../types';
 import { saveSettings } from '../services/storage';
 import { toast } from 'sonner';
 
-export type NavTab = 'dashboard' | 'mock-exams' | 'mistake-vault' | 'question-bank' | 'performance' | 'settings';
+export type NavTab = 'dashboard' | 'mock-exams' | 'quick-sprints' | 'mistake-vault' | 'question-bank' | 'performance' | 'settings';
 
 interface NavigationProps {
   currentTab: NavTab;
@@ -41,6 +41,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   const navItems: { id: NavTab; label: string; badge?: number }[] = [
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'mock-exams', label: 'Mock Exams' },
+    { id: 'quick-sprints', label: 'Quick Sprints' },
     { id: 'mistake-vault', label: 'Mistake Vault', badge: activeMistakeCount },
     { id: 'question-bank', label: 'Question Bank' },
     { id: 'performance', label: 'Performance' },

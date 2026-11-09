@@ -76,7 +76,9 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
       <div className="bg-[#111318] border border-white/[0.07] rounded-2xl p-6 sm:p-8 space-y-6 card-highlight">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
           <div className="space-y-1">
-            <div className="text-xs text-[#9ea5b3]">Exam #{session.examNumber} Result</div>
+            <div className="text-xs text-[#9ea5b3]">
+              {session.title || `Exam #${session.examNumber}`} Result
+            </div>
             <div className="flex items-baseline space-x-3">
               <span className="text-4xl sm:text-5xl font-mono font-semibold text-[#f4f5f7]">
                 {result.percentage}%
@@ -95,7 +97,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
 
           <div className="flex items-center space-x-6 text-xs text-[#9ea5b3] font-mono">
             <div>
-              <span className="text-[#34d399] font-semibold">{result.correctAnswers}</span> / 65 correct
+              <span className="text-[#34d399] font-semibold">{result.correctAnswers}</span> / {result.totalQuestions} correct
             </div>
             <div>
               <span className="text-[#f87171] font-semibold">{result.incorrectAnswers}</span> incorrect

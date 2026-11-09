@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, ArrowRight, Info, AlertCircle, Sparkles } from 'lucide-react';
+import { Play, ArrowRight, Info, AlertCircle, Sparkles, Zap } from 'lucide-react';
 import { AppSettings, ExamSession } from '../types';
 import { calculateReadiness } from '../services/storage';
 import { AWS_DOMAINS, PASSING_PERCENTAGE } from '../data/domains';
@@ -156,13 +156,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <span>Resume Exam #{activeExam.examNumber} (Q{activeExam.currentQuestionIndex + 1})</span>
               </button>
             ) : (
-              <button
-                onClick={onLaunchNewExam}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] text-xs font-semibold flex items-center justify-center space-x-2 transition-all duration-150 btn-press glow-accent"
-              >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Start Mock Exam (65 Qs • 90m)</span>
-              </button>
+              <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2 w-full sm:w-auto">
+                <button
+                  onClick={onLaunchNewExam}
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] text-xs font-semibold flex items-center justify-center space-x-2 transition-all duration-150 btn-press glow-accent"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>Start Mock Exam (65 Qs • 90m)</span>
+                </button>
+                <button
+                  onClick={() => onNavigateTab('quick-sprints')}
+                  className="w-full sm:w-auto px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-[#f4f5f7] text-xs font-medium flex items-center justify-center space-x-1.5 transition-all duration-150 btn-press border border-white/[0.06]"
+                >
+                  <Zap className="w-3.5 h-3.5 text-[#fbbf24]" />
+                  <span>10–15 Min Quick Sprint</span>
+                </button>
+              </div>
             )}
 
             <div className="flex items-center space-x-3 text-xs text-[#9ea5b3]">

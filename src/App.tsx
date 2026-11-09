@@ -10,6 +10,7 @@ import { PerformanceView } from './components/PerformanceView';
 import { SettingsView } from './components/SettingsView';
 import { MistakeVaultView } from './components/MistakeVaultView';
 import { MistakeDrillSimulator } from './components/MistakeDrillSimulator';
+import { QuickSprintsView } from './components/QuickSprintsView';
 
 import { AppSettings, ExamSession, MistakeVault, Question } from './types';
 import {
@@ -108,6 +109,21 @@ export const App: React.FC = () => {
       setViewingResultsSession(null);
       setIsExamActive(true);
     }
+  };
+
+  const handleLaunchSprint = (sprintSession: ExamSession) => {
+    if (activeExam && !activeExam.isSubmitted) {
+      if (!confirm('An examination or sprint is already in progress. Discard the active session and start this sprint?')) {
+        setIsExamActive(true);
+        return;
+      }
+    }
+
+    setActiveExam(sprintSession);
+    setViewingResultsSession(null);
+    setIsExamActive(true);
+    pushProfileToCloud(getSyncKey(), settings, sprintSession);
+    toast.success(`${sprintSession.title || 'Sprint'} started (${sprintSession.questions.length} Questions • ${sprintSession.durationMinutes}m)`);
   };
 
   const handleSubmitExam = (session: ExamSession) => {
@@ -218,6 +234,14 @@ export const App: React.FC = () => {
             onLaunchNewExam={handleLaunchNewExam}
             onResumeExam={handleResumeExam}
             onViewResults={handleViewResults}
+          />
+        )}
+
+        {currentTab === 'quick-sprints' && (
+          <QuickSprintsView
+            completedExams={completedExams}
+            allQuestions={questionBank}
+            onLaunchSprint={handleLaunchSprint}
           />
         )}
 
