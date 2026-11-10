@@ -62,7 +62,7 @@ export const Navigation: React.FC<NavigationProps> = ({
     { id: 'settings', label: 'Settings' },
   ];
 
-  // Primary mobile bottom navigation items
+  // Primary mobile & tablet bottom navigation items
   const mobilePrimaryTabs: { id: NavTab; label: string; icon: React.FC<{ className?: string }>; badge?: number }[] = [
     { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
     { id: 'mock-exams', label: 'Exams', icon: FileText },
@@ -74,39 +74,40 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <>
-      <header className="border-b border-white/[0.06] bg-[#090a0e]/80 backdrop-blur-xl sticky top-0 z-40 transition-colors">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <header className="border-b border-white/[0.06] bg-[#090a0e]/90 backdrop-blur-xl sticky top-0 z-40 transition-colors">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 h-14 flex items-center justify-between gap-3 lg:gap-6">
           
           {/* Left: Brand & Desktop Nav */}
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-3 lg:space-x-6 xl:space-x-8 shrink-0">
             <button
               onClick={() => onSelectTab('dashboard')}
-              className="flex items-center space-x-2 text-left focus:outline-none group touch-manipulation"
+              className="flex items-center space-x-2 text-left focus:outline-none group touch-manipulation shrink-0"
             >
-              <span className="font-semibold text-sm tracking-tight text-[#f4f5f7] group-hover:text-white transition-colors">
+              <span className="font-semibold text-sm tracking-tight text-[#f4f5f7] group-hover:text-white transition-colors whitespace-nowrap">
                 CloudPrep
               </span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.04] text-[#9ea5b3] border border-white/[0.06]">
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.04] text-[#9ea5b3] border border-white/[0.06] whitespace-nowrap shrink-0">
                 CLF-C02
               </span>
             </button>
 
-            <nav className="hidden md:flex items-center space-x-1 text-xs">
+            {/* Desktop Navigation Tabs: Shown on laptop & desktop (>= 1024px) */}
+            <nav className="hidden lg:flex items-center space-x-1 text-xs shrink-0">
               {navItems.map((item) => {
                 const isActive = currentTab === item.id;
                 return (
                   <button
                     key={item.id}
                     onClick={() => onSelectTab(item.id)}
-                    className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md transition-all duration-150 btn-press touch-manipulation ${
+                    className={`flex items-center space-x-1.5 px-2.5 xl:px-3 py-1.5 rounded-md transition-all duration-150 btn-press touch-manipulation whitespace-nowrap shrink-0 ${
                       isActive
                         ? 'text-[#f4f5f7] font-medium bg-white/[0.06]'
                         : 'text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.03]'
                     }`}
                   >
-                    <span>{item.label}</span>
+                    <span className="whitespace-nowrap">{item.label}</span>
                     {item.badge !== undefined && item.badge > 0 && (
-                      <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-[#f87171]/20 text-[#f87171] font-semibold border border-[#f87171]/30">
+                      <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-[#f87171]/20 text-[#f87171] font-semibold border border-[#f87171]/30 whitespace-nowrap shrink-0">
                         {item.badge}
                       </span>
                     )}
@@ -117,34 +118,34 @@ export const Navigation: React.FC<NavigationProps> = ({
           </div>
 
           {/* Right: In-Progress Indicator, Cloud Sync & Countdown Pill */}
-          <div className="flex items-center space-x-2 text-xs">
+          <div className="flex items-center space-x-2 text-xs shrink-0 whitespace-nowrap">
             <button
               onClick={() => onSelectTab('settings')}
               title="Cloud Sync Active (Supabase) - Click to manage"
-              className="flex items-center space-x-1.5 px-2 py-1 rounded-md text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.04] transition-colors btn-press border border-white/[0.05] touch-manipulation"
+              className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.04] transition-colors btn-press border border-white/[0.05] touch-manipulation whitespace-nowrap shrink-0"
             >
-              <Cloud className="w-3.5 h-3.5 text-[#34d399]" />
-              <span className="hidden sm:inline text-[11px] font-mono text-[#9ea5b3]">Synced</span>
+              <Cloud className="w-3.5 h-3.5 text-[#34d399] shrink-0" />
+              <span className="hidden sm:inline text-[11px] font-mono text-[#9ea5b3] whitespace-nowrap">Synced</span>
             </button>
 
             {activeExam && !activeExam.isSubmitted && (
               <button
                 onClick={() => onSelectTab('mock-exams')}
-                className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#fbbf24]/10 text-[#fbbf24] border border-[#fbbf24]/20 hover:bg-[#fbbf24]/15 transition-colors btn-press text-[11px] touch-manipulation"
+                className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#fbbf24]/10 text-[#fbbf24] border border-[#fbbf24]/20 hover:bg-[#fbbf24]/15 transition-colors btn-press text-[11px] touch-manipulation whitespace-nowrap shrink-0"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#fbbf24] animate-pulse" />
-                <span className="truncate max-w-[100px] sm:max-w-none">Resume #{activeExam.examNumber}</span>
-                <ChevronRight className="w-3 h-3" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#fbbf24] animate-pulse shrink-0" />
+                <span className="whitespace-nowrap">Resume #{activeExam.examNumber}</span>
+                <ChevronRight className="w-3 h-3 shrink-0" />
               </button>
             )}
 
-            <div className="relative">
+            <div className="relative shrink-0">
               <button
                 onClick={() => setShowDatePicker(!showDatePicker)}
-                className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.04] transition-colors btn-press border border-white/[0.05] touch-manipulation"
+                className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.04] transition-colors btn-press border border-white/[0.05] touch-manipulation whitespace-nowrap shrink-0"
               >
-                <Calendar className="w-3.5 h-3.5 text-[#6d8aff]" />
-                <span className="tabular-nums font-mono text-[11px]">
+                <Calendar className="w-3.5 h-3.5 text-[#6d8aff] shrink-0" />
+                <span className="tabular-nums font-mono text-[11px] whitespace-nowrap">
                   {diffDays > 0 ? `${diffDays}d left` : diffDays === 0 ? 'Exam Today' : 'Done'}
                 </span>
               </button>
@@ -180,10 +181,10 @@ export const Navigation: React.FC<NavigationProps> = ({
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Dock */}
+      {/* Mobile / Tablet Bottom Navigation Dock (< 1024px) */}
       <nav
         aria-label="Mobile Navigation"
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#090a0e]/95 backdrop-blur-2xl border-t border-white/[0.08] pb-safe flex items-stretch justify-around h-16 shadow-[0_-8px_24px_rgba(0,0,0,0.5)]"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#090a0e]/95 backdrop-blur-2xl border-t border-white/[0.08] pb-safe flex items-stretch justify-around h-16 shadow-[0_-8px_24px_rgba(0,0,0,0.5)]"
       >
         {mobilePrimaryTabs.map((tab) => {
           const isActive = currentTab === tab.id;
@@ -239,14 +240,14 @@ export const Navigation: React.FC<NavigationProps> = ({
         </button>
       </nav>
 
-      {/* Slide-Up "More" Sheet for Mobile */}
+      {/* Slide-Up "More" Sheet for Mobile & Tablet */}
       {showMobileMore && (
-        <div className="md:hidden fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="lg:hidden fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
           <div
             className="fixed inset-0"
             onClick={() => setShowMobileMore(false)}
           />
-          <div className="relative bg-[#111318] border-t border-white/[0.1] rounded-t-3xl p-5 pb-safe space-y-4 shadow-2xl z-10 animate-in slide-in-from-bottom-8 duration-200">
+          <div className="relative bg-[#111318] border-t border-white/[0.1] rounded-t-3xl p-5 pb-safe space-y-4 shadow-2xl z-10 animate-in slide-in-from-bottom-8 duration-200 max-w-lg mx-auto w-full">
             {/* Sheet Handle */}
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
               <div className="flex items-center space-x-2">
