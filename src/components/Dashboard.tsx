@@ -61,7 +61,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const diffDays = Math.ceil((targetTime - nowTime) / (1000 * 60 * 60 * 24));
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-10 animate-in fade-in duration-200">
+    <div className="max-w-6xl mx-auto px-3 sm:px-6 py-5 sm:py-10 space-y-6 sm:space-y-10 animate-in fade-in duration-200">
       
       {/* Primary Readiness & Command Console */}
       <section className="bg-[#111318] border border-white/[0.07] rounded-2xl p-6 sm:p-8 card-highlight relative overflow-hidden">

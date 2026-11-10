@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Flag, ArrowLeft, ArrowRight, X, Clock } from 'lucide-react';
+import { Flag, ArrowLeft, ArrowRight, X, Clock, LayoutGrid, CheckCircle2 } from 'lucide-react';
 import { ExamSession, Question } from '../types';
 import { useExamTimer } from '../hooks/useExamTimer';
 import { AWS_DOMAINS } from '../data/domains';
@@ -21,6 +21,7 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
 }) => {
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [showExitConfirmModal, setShowExitConfirmModal] = useState(false);
+  const [showQuestionDrawer, setShowQuestionDrawer] = useState(false);
 
   const handleTimeExpired = useCallback(() => {
     toast.error('90-minute limit reached. Submitting examination...', { duration: 5000 });
@@ -96,12 +97,13 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
 
   const handleJumpToQuestion = (index: number) => {
     updateExam({ currentQuestionIndex: index });
+    setShowQuestionDrawer(false);
   };
 
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (showSubmitModal || showExitConfirmModal) return;
+      if (showSubmitModal || showExitConfirmModal || showQuestionDrawer) return;
 
       if (e.key === 'ArrowRight') {
         e.preventDefault();
@@ -130,7 +132,7 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentQIndex, currentQ, userAnswers, isFlagged, showSubmitModal, showExitConfirmModal]);
+  }, [currentQIndex, currentQ, userAnswers, isFlagged, showSubmitModal, showExitConfirmModal, showQuestionDrawer]);
 
   const answeredCount = Object.keys(session.answers).filter(
     (qId) => session.answers[qId] && session.answers[qId].length > 0
@@ -144,35 +146,70 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
     .map((q, idx) => (!session.answers[q.id] || session.answers[q.id].length === 0 ? idx + 1 : null))
     .filter((num): num is number => num !== null);
 
+  const renderQuestionGrid = () => (
+    <div className="grid grid-cols-8 sm:grid-cols-10 lg:grid-cols-8 gap-1.5">
+      {session.questions.map((q, idx) => {
+        const isCurrent = idx === currentQIndex;
+        const hasAnswer = session.answers[q.id] && session.answers[q.id].length > 0;
+        const isFlag = session.flaggedQuestionIds.includes(q.id);
+
+        return (
+          <button
+            key={q.id}
+            onClick={() => handleJumpToQuestion(idx)}
+            className={`relative w-8 h-8 rounded-md text-xs font-mono flex items-center justify-center transition-all duration-100 btn-press touch-manipulation ${
+              isCurrent
+                ? 'bg-[#6d8aff] text-[#090a0e] font-bold shadow-md shadow-[#6d8aff]/20'
+                : hasAnswer
+                ? 'bg-white/[0.08] text-[#f4f5f7] border border-white/[0.1] hover:border-[#6d8aff]'
+                : 'bg-[#090a0e] text-[#5e6573] hover:text-[#9ea5b3] border border-transparent'
+            }`}
+            title={`Question ${idx + 1}`}
+          >
+            <span>{idx + 1}</span>
+            {isFlag && (
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#fbbf24] rounded-full border border-[#111318]" />
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-[#090a0e] text-[#f4f5f7] flex flex-col font-sans select-none">
       
       {/* Precision HUD Header */}
-      <header className="border-b border-white/[0.06] bg-[#090a0e]/90 backdrop-blur-xl px-4 sm:px-6 h-14 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center space-x-3 text-xs">
+      <header className="border-b border-white/[0.06] bg-[#090a0e]/90 backdrop-blur-xl px-3 sm:px-6 h-14 flex items-center justify-between sticky top-0 z-40">
+        <div className="flex items-center space-x-2.5 text-xs">
           <button
             onClick={() => setShowExitConfirmModal(true)}
-            className="text-[#9ea5b3] hover:text-[#f4f5f7] transition-colors py-1 flex items-center space-x-1"
+            className="text-[#9ea5b3] hover:text-[#f4f5f7] transition-colors py-1 flex items-center space-x-1 touch-manipulation"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline">Save & Exit</span>
           </button>
-          <span className="text-white/10">|</span>
-          <span className="text-[#9ea5b3] font-medium">
+          <span className="text-white/10 hidden sm:inline">|</span>
+          <span className="text-[#9ea5b3] font-medium hidden sm:inline truncate max-w-[140px]">
             {session.title || `Exam #${session.examNumber}`}
           </span>
         </div>
 
-        {/* Centered Question Index */}
-        <div className="text-xs text-[#f4f5f7] font-medium flex items-center space-x-1.5">
-          <span>Question</span>
+        {/* Centered Question Index / Drawer Trigger */}
+        <button
+          onClick={() => setShowQuestionDrawer(true)}
+          className="text-xs text-[#f4f5f7] font-medium flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] transition-colors touch-manipulation"
+          title="Click to view all question tiles"
+        >
+          <span>Q</span>
           <span className="font-mono text-[#6d8aff] font-semibold">{currentQIndex + 1}</span>
           <span className="text-[#5e6573]">/</span>
           <span className="font-mono text-[#9ea5b3]">{session.questions.length}</span>
-        </div>
+          <span className="text-[10px] text-[#5e6573] ml-1">▾</span>
+        </button>
 
         {/* Timer & Finish */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <div
             className={`font-mono text-xs font-semibold tabular-nums px-2.5 py-1 rounded-md border flex items-center space-x-1.5 ${
               timer.isUrgent5m
@@ -182,13 +219,13 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
                 : 'text-[#9ea5b3] border-white/[0.06] bg-white/[0.03]'
             }`}
           >
-            <Clock className="w-3 h-3" />
+            <Clock className="w-3.5 h-3.5" />
             <span>{timer.formattedTime}</span>
           </div>
 
           <button
             onClick={() => setShowSubmitModal(true)}
-            className="px-3.5 py-1.5 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] text-xs font-medium rounded-lg transition-colors btn-press border border-white/[0.06]"
+            className="px-3 py-1.5 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] text-xs font-medium rounded-lg transition-colors btn-press border border-white/[0.06] touch-manipulation"
           >
             Finish
           </button>
@@ -196,44 +233,44 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
       </header>
 
       {/* Main Viewport */}
-      <div className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-8 pb-28 lg:pb-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Left Column: Question & Options (8 cols) */}
         <main className="lg:col-span-8 space-y-6">
           
-          <div className="bg-[#111318] border border-white/[0.07] rounded-2xl p-6 sm:p-8 space-y-6 card-highlight">
+          <div className="bg-[#111318] border border-white/[0.07] rounded-2xl p-4 sm:p-8 space-y-5 sm:space-y-6 card-highlight">
             
             {/* Meta bar */}
-            <div className="flex items-center justify-between text-xs text-[#9ea5b3]">
+            <div className="flex items-center justify-between text-xs text-[#9ea5b3] pb-1 border-b border-white/[0.04]">
               <div className="flex items-center space-x-2">
                 <span className="font-medium text-[#f4f5f7]">{domain.name}</span>
                 {currentQ.type === 'multiple' && (
                   <>
                     <span className="text-white/20">•</span>
-                    <span className="text-[#6d8aff] font-medium">Select {currentQ.selectCount || 2} options</span>
+                    <span className="text-[#6d8aff] font-medium">Select {currentQ.selectCount || 2}</span>
                   </>
                 )}
               </div>
 
               <button
                 onClick={handleToggleFlag}
-                className={`flex items-center space-x-1.5 transition-colors py-1 px-2 rounded-md ${
+                className={`flex items-center space-x-1.5 transition-colors py-1 px-2 rounded-md touch-manipulation ${
                   isFlagged ? 'text-[#fbbf24] bg-[#fbbf24]/10' : 'text-[#5e6573] hover:text-[#9ea5b3] hover:bg-white/[0.02]'
                 }`}
                 title="Shortcut: Press 'F'"
               >
                 <Flag className={`w-3.5 h-3.5 ${isFlagged ? 'fill-current' : ''}`} />
-                <span className="text-[11px]">{isFlagged ? 'Flagged' : 'Flag for review'}</span>
+                <span className="text-[11px] hidden sm:inline">{isFlagged ? 'Flagged' : 'Flag for review'}</span>
               </button>
             </div>
 
             {/* Question Text */}
-            <div className="text-[17px] text-[#f4f5f7] leading-[1.65] font-normal max-w-[70ch]">
+            <div className="text-[15px] sm:text-[17px] text-[#f4f5f7] leading-[1.65] font-normal max-w-[70ch]">
               {currentQ.questionText}
             </div>
 
             {/* Options */}
-            <div className="space-y-2.5 pt-2">
+            <div className="space-y-2.5 pt-1">
               {currentQ.options.map((option) => {
                 const isSelected = userAnswers.includes(option.id);
 
@@ -241,10 +278,10 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
                   <button
                     key={option.id}
                     onClick={() => handleToggleOption(option.id)}
-                    className={`w-full p-4 rounded-xl text-left transition-all duration-150 flex items-start space-x-3.5 border btn-press ${
+                    className={`w-full p-3.5 sm:p-4 rounded-xl text-left transition-all duration-150 flex items-start space-x-3 sm:space-x-3.5 border btn-press touch-manipulation min-h-[48px] ${
                       isSelected
                         ? 'bg-[#181a21] border-[#6d8aff] card-highlight'
-                        : 'bg-[#090a0e] border-white/[0.06] hover:bg-[#111318] hover:border-white/[0.12]'
+                        : 'bg-[#090a0e] border-white/[0.06] hover:bg-[#111318] hover:border-white/[0.12] active:bg-[#14161b]'
                     }`}
                   >
                     <span
@@ -267,8 +304,8 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
 
           </div>
 
-          {/* Navigation Controls */}
-          <div className="flex items-center justify-between pt-1">
+          {/* Desktop-only Navigation Controls */}
+          <div className="hidden lg:flex items-center justify-between pt-1">
             <button
               onClick={handlePrev}
               disabled={currentQIndex === 0}
@@ -286,50 +323,23 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
               onClick={handleNext}
               className="flex items-center space-x-1.5 px-5 py-2 rounded-lg bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] text-xs font-semibold transition-colors btn-press shadow-md shadow-[#6d8aff]/15"
             >
-              <span>{currentQIndex === 64 ? 'Review & Submit' : 'Next'}</span>
+              <span>{currentQIndex === session.questions.length - 1 ? 'Review & Submit' : 'Next'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
         </main>
 
-        {/* Right Column: 65-Tile Navigator (4 cols) */}
-        <aside className="lg:col-span-4 bg-[#111318] border border-white/[0.07] rounded-2xl p-5 space-y-4 card-highlight">
+        {/* Right Column: 65-Tile Navigator on Desktop (hidden on mobile, opens via bottom dock / drawer) */}
+        <aside className="hidden lg:block lg:col-span-4 bg-[#111318] border border-white/[0.07] rounded-2xl p-5 space-y-4 card-highlight sticky top-20">
           <div className="flex items-center justify-between text-xs">
             <span className="text-[#f4f5f7] font-medium">Question Overview</span>
             <span className="text-[#9ea5b3] font-mono text-[11px]">
-              {answeredCount} of 65 completed
+              {answeredCount} of {session.questions.length} completed
             </span>
           </div>
 
-          {/* Grid */}
-          <div className="grid grid-cols-8 sm:grid-cols-10 lg:grid-cols-8 gap-1.5">
-            {session.questions.map((q, idx) => {
-              const isCurrent = idx === currentQIndex;
-              const hasAnswer = session.answers[q.id] && session.answers[q.id].length > 0;
-              const isFlag = session.flaggedQuestionIds.includes(q.id);
-
-              return (
-                <button
-                  key={q.id}
-                  onClick={() => handleJumpToQuestion(idx)}
-                  className={`relative w-8 h-8 rounded-md text-xs font-mono flex items-center justify-center transition-all duration-100 btn-press ${
-                    isCurrent
-                      ? 'bg-[#6d8aff] text-[#090a0e] font-bold shadow-md shadow-[#6d8aff]/20'
-                      : hasAnswer
-                      ? 'bg-white/[0.08] text-[#f4f5f7] border border-white/[0.1] hover:border-[#6d8aff]'
-                      : 'bg-[#090a0e] text-[#5e6573] hover:text-[#9ea5b3] border border-transparent'
-                  }`}
-                  title={`Question ${idx + 1}`}
-                >
-                  <span>{idx + 1}</span>
-                  {isFlag && (
-                    <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#fbbf24] rounded-full border border-[#111318]" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          {renderQuestionGrid()}
 
           <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-[#5e6573] font-mono">
             <span>{flaggedCount} flagged</span>
@@ -339,15 +349,108 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
 
       </div>
 
+      {/* Mobile Sticky Thumb-Friendly Bottom Control Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#090a0e]/95 backdrop-blur-2xl border-t border-white/[0.08] px-4 py-2.5 pb-safe flex items-center justify-between shadow-[0_-8px_24px_rgba(0,0,0,0.6)]">
+        {/* Left: Previous */}
+        <button
+          onClick={handlePrev}
+          disabled={currentQIndex === 0}
+          className={`flex items-center justify-center space-x-1 px-3 py-2.5 rounded-xl text-xs font-medium border border-white/[0.06] bg-white/[0.03] transition-colors touch-manipulation min-h-[44px] ${
+            currentQIndex === 0 ? 'text-[#444a57] opacity-40' : 'text-[#9ea5b3] active:text-white active:bg-white/[0.08]'
+          }`}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="hidden xs:inline">Prev</span>
+        </button>
+
+        {/* Center: Flag & Navigator Drawer Toggle */}
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={handleToggleFlag}
+            className={`p-2.5 rounded-xl border transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center ${
+              isFlagged
+                ? 'bg-[#fbbf24]/15 border-[#fbbf24]/30 text-[#fbbf24]'
+                : 'bg-white/[0.03] border-white/[0.06] text-[#7e8695] active:text-white'
+            }`}
+            title="Flag question"
+          >
+            <Flag className={`w-4 h-4 ${isFlagged ? 'fill-current' : ''}`} />
+          </button>
+
+          <button
+            onClick={() => setShowQuestionDrawer(true)}
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl border border-white/[0.06] bg-white/[0.03] text-xs font-mono text-[#9ea5b3] active:text-white touch-manipulation min-h-[44px]"
+            title="Open question grid"
+          >
+            <LayoutGrid className="w-4 h-4 text-[#6d8aff]" />
+            <span>{currentQIndex + 1}/{session.questions.length}</span>
+            {unansweredCount > 0 && (
+              <span className="w-2 h-2 rounded-full bg-[#f87171]" />
+            )}
+          </button>
+        </div>
+
+        {/* Right: Next / Review */}
+        <button
+          onClick={handleNext}
+          className="flex items-center justify-center space-x-1.5 px-5 py-2.5 rounded-xl bg-[#6d8aff] active:bg-[#839cff] text-[#090a0e] text-xs font-semibold shadow-lg shadow-[#6d8aff]/20 touch-manipulation min-h-[44px]"
+        >
+          <span>{currentQIndex === session.questions.length - 1 ? 'Finish' : 'Next'}</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Slide-Up Mobile Question Grid Drawer */}
+      {showQuestionDrawer && (
+        <div className="lg:hidden fixed inset-0 z-50 flex flex-col justify-end bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div
+            className="fixed inset-0"
+            onClick={() => setShowQuestionDrawer(false)}
+          />
+          <div className="relative bg-[#111318] border-t border-white/[0.1] rounded-t-3xl p-5 pb-safe max-h-[85dvh] flex flex-col space-y-4 shadow-2xl z-10 animate-in slide-in-from-bottom-8 duration-200">
+            <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+              <div>
+                <h3 className="text-sm font-semibold text-[#f4f5f7]">Question Overview</h3>
+                <span className="text-[11px] font-mono text-[#9ea5b3]">
+                  {answeredCount} of {session.questions.length} answered • {flaggedCount} flagged
+                </span>
+              </div>
+              <button
+                onClick={() => setShowQuestionDrawer(false)}
+                className="p-1.5 rounded-lg text-[#9ea5b3] hover:text-white touch-manipulation"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="overflow-y-auto max-h-[55dvh] py-2">
+              {renderQuestionGrid()}
+            </div>
+
+            <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between">
+              <button
+                onClick={() => {
+                  setShowQuestionDrawer(false);
+                  setShowSubmitModal(true);
+                }}
+                className="w-full py-2.5 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] text-xs font-semibold rounded-xl border border-white/[0.08] touch-manipulation"
+              >
+                Review & Submit Examination
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Submission Confirmation Modal */}
       {showSubmitModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-150">
-          <div className="bg-[#14161b] border border-white/[0.1] rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 card-highlight-elevated">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-4 animate-in fade-in duration-150">
+          <div className="bg-[#14161b] border border-white/[0.1] rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-2xl space-y-4 card-highlight-elevated animate-in slide-in-from-bottom-4 duration-150">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
-              <h3 className="text-xs font-semibold text-[#f4f5f7]">Submit Examination?</h3>
+              <h3 className="text-sm font-semibold text-[#f4f5f7]">Submit Examination?</h3>
               <button
                 onClick={() => setShowSubmitModal(false)}
-                className="text-[#9ea5b3] hover:text-[#f4f5f7]"
+                className="text-[#9ea5b3] hover:text-[#f4f5f7] p-1 touch-manipulation"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -355,7 +458,7 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
 
             <div className="text-xs text-[#9ea5b3] space-y-2">
               <p>
-                Answered: <strong className="text-[#f4f5f7] font-mono">{answeredCount}</strong> of 65 questions
+                Answered: <strong className="text-[#f4f5f7] font-mono">{answeredCount}</strong> of {session.questions.length} questions
               </p>
               {unansweredCount > 0 ? (
                 <div className="p-3 bg-[#f87171]/10 border border-[#f87171]/20 rounded-xl text-[#f87171] space-y-1">
@@ -365,14 +468,17 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
                   </div>
                 </div>
               ) : (
-                <p className="text-[#34d399]">All 65 questions have been completed.</p>
+                <p className="text-[#34d399] flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>All questions completed! Ready to score.</span>
+                </p>
               )}
             </div>
 
             <div className="flex justify-end space-x-2 pt-2">
               <button
                 onClick={() => setShowSubmitModal(false)}
-                className="px-3 py-1.5 text-xs text-[#9ea5b3] hover:text-[#f4f5f7]"
+                className="px-3.5 py-2 text-xs text-[#9ea5b3] hover:text-[#f4f5f7] touch-manipulation min-h-[44px]"
               >
                 Keep Testing
               </button>
@@ -381,7 +487,7 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
                   setShowSubmitModal(false);
                   onSubmitExam(session);
                 }}
-                className="px-4 py-1.5 bg-[#34d399] hover:bg-[#10b981] text-[#090a0e] font-semibold text-xs rounded-lg transition-colors btn-press shadow-md shadow-[#34d399]/15"
+                className="px-4 py-2 bg-[#34d399] hover:bg-[#10b981] text-[#090a0e] font-semibold text-xs rounded-xl transition-colors btn-press shadow-md shadow-[#34d399]/15 touch-manipulation min-h-[44px]"
               >
                 Grade & Submit
               </button>
@@ -392,16 +498,16 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
 
       {/* Exit Modal */}
       {showExitConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-150">
-          <div className="bg-[#14161b] border border-white/[0.1] rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 card-highlight-elevated">
-            <h3 className="text-xs font-semibold text-[#f4f5f7]">Leave Examination?</h3>
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-4 animate-in fade-in duration-150">
+          <div className="bg-[#14161b] border border-white/[0.1] rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-2xl space-y-4 card-highlight-elevated animate-in slide-in-from-bottom-4 duration-150">
+            <h3 className="text-sm font-semibold text-[#f4f5f7]">Leave Examination?</h3>
             <p className="text-xs text-[#9ea5b3] leading-relaxed">
               Your answers and remaining time are saved automatically. You can resume at any time from the dashboard.
             </p>
             <div className="flex justify-end space-x-2 pt-2">
               <button
                 onClick={() => setShowExitConfirmModal(false)}
-                className="px-3 py-1.5 text-xs text-[#9ea5b3] hover:text-[#f4f5f7]"
+                className="px-3.5 py-2 text-xs text-[#9ea5b3] hover:text-[#f4f5f7] touch-manipulation min-h-[44px]"
               >
                 Cancel
               </button>
@@ -410,7 +516,7 @@ export const ExamSimulator: React.FC<ExamSimulatorProps> = ({
                   setShowExitConfirmModal(false);
                   onExitWithoutSubmit();
                 }}
-                className="px-3.5 py-1.5 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] text-xs font-medium rounded-lg border border-white/[0.06] transition-colors btn-press"
+                className="px-4 py-2 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] text-xs font-medium rounded-xl border border-white/[0.06] transition-colors btn-press touch-manipulation min-h-[44px]"
               >
                 Save & Exit
               </button>

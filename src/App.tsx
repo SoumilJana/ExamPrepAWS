@@ -213,7 +213,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Tab Panels */}
-      <main className="flex-1 pb-16">
+      <main className="flex-1 pb-24 md:pb-16">
         {currentTab === 'dashboard' && (
           <Dashboard
             completedExams={completedExams}

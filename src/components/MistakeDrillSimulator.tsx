@@ -226,7 +226,7 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
                 <div
                   key={opt.id}
                   onClick={() => handleSelectOption(opt.id)}
-                  className={`p-3.5 rounded-xl border flex items-start space-x-3 cursor-pointer transition-all btn-press ${style}`}
+                  className={`p-3.5 rounded-xl border flex items-start space-x-3 cursor-pointer transition-all btn-press touch-manipulation min-h-[48px] ${style}`}
                 >
                   <span
                     className={`font-mono font-medium shrink-0 w-5 h-5 rounded flex items-center justify-center text-[11px] ${
@@ -255,12 +255,12 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
               <button
                 onClick={handleCheckAnswer}
                 disabled={selectedOptionIds.length === 0}
-                className="ml-auto px-5 py-2 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-xs rounded-xl transition-colors disabled:opacity-30 disabled:pointer-events-none btn-press shadow-md shadow-[#6d8aff]/15"
+                className="w-full sm:w-auto sm:ml-auto px-6 py-2.5 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-xs rounded-xl transition-colors disabled:opacity-30 disabled:pointer-events-none btn-press shadow-md shadow-[#6d8aff]/15 touch-manipulation min-h-[44px]"
               >
                 Check Answer
               </button>
             ) : (
-              <div className="w-full flex items-center justify-between">
+              <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                 <div className="flex items-center space-x-2">
                   {isCurrentCorrect ? (
                     <div className="flex items-center space-x-1.5 text-xs text-[#34d399] font-medium">
@@ -277,10 +277,10 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
 
                 <button
                   onClick={handleNext}
-                  className="flex items-center space-x-1.5 px-5 py-2 bg-[#f4f5f7] hover:bg-white text-[#090a0e] font-semibold text-xs rounded-xl transition-colors btn-press shadow-md shadow-white/10"
+                  className="flex items-center justify-center space-x-1.5 px-6 py-2.5 bg-[#f4f5f7] hover:bg-white text-[#090a0e] font-semibold text-xs rounded-xl transition-colors btn-press shadow-md shadow-white/10 touch-manipulation min-h-[44px]"
                 >
                   <span>{currentIndex + 1 < questions.length ? 'Next Question' : 'View Summary'}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             )}

@@ -256,8 +256,8 @@ export const QuestionBankView: React.FC<QuestionBankViewProps> = ({ questions })
 
       {/* Question Details Drawer / Modal */}
       {activeQuestion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-150">
-          <div className="bg-[#14161b] border border-white/[0.1] rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5 max-h-[85vh] overflow-y-auto text-xs card-highlight-elevated">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-md p-0 sm:p-4 animate-in fade-in duration-150">
+          <div className="bg-[#14161b] border-t sm:border border-white/[0.1] rounded-t-3xl sm:rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl space-y-5 max-h-[88dvh] overflow-y-auto text-xs card-highlight-elevated pb-safe animate-in slide-in-from-bottom-4 duration-150">
             
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
               <div className="flex items-center space-x-2 text-xs">
