@@ -134,7 +134,9 @@ export const Navigation: React.FC<NavigationProps> = ({
                 className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#fbbf24]/10 text-[#fbbf24] border border-[#fbbf24]/20 hover:bg-[#fbbf24]/15 transition-colors btn-press text-[11px] touch-manipulation whitespace-nowrap shrink-0"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#fbbf24] animate-pulse shrink-0" />
-                <span className="whitespace-nowrap">Resume #{activeExam.examNumber}</span>
+                <span className="whitespace-nowrap">
+                  Resume {activeExam.title ? (activeExam.title.length > 16 ? `${activeExam.title.substring(0, 14)}...` : activeExam.title) : `#${activeExam.examNumber}`}
+                </span>
                 <ChevronRight className="w-3 h-3 shrink-0" />
               </button>
             )}

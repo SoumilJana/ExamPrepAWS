@@ -63,8 +63,8 @@ export const pushProfileToCloud = async (syncKey: string, settings: AppSettings,
 // 3. Push a completed exam to Supabase
 export const pushExamToCloud = async (syncKey: string, exam: ExamSession) => {
   try {
-    // Ensure parent user_sync row exists first
-    await pushProfileToCloud(syncKey, getSettings(), getActiveExam());
+    // Explicitly clear active_exam in cloud profile since it is now submitted
+    await pushProfileToCloud(syncKey, getSettings(), null);
 
     const { error } = await supabase.from('completed_exams').upsert({
       id: exam.id,
@@ -170,9 +170,36 @@ export const pullFromCloud = async (
 
     // Handle active exam
     let finalActiveExam = getActiveExam();
-    if (profileData?.active_exam && !finalActiveExam) {
-      finalActiveExam = profileData.active_exam;
-      saveActiveExam(finalActiveExam);
+
+    if (profileData && profileData.active_exam) {
+      const isAlreadyCompleted =
+        profileData.active_exam.isSubmitted ||
+        finalExams.some((e) => e.id === profileData.active_exam.id);
+
+      if (isAlreadyCompleted) {
+        // Discard zombie submitted exam from active slot
+        finalActiveExam = null;
+        saveActiveExam(null);
+        await pushProfileToCloud(syncKey, finalSettings, null);
+      } else {
+        finalActiveExam = profileData.active_exam;
+        saveActiveExam(finalActiveExam);
+      }
+    } else if (profileData && profileData.active_exam === null) {
+      // Cloud explicitly says no active session
+      finalActiveExam = null;
+      saveActiveExam(null);
+    } else if (finalActiveExam) {
+      // Validate local active exam against completed list
+      const activeId = finalActiveExam.id;
+      const isLocalAlreadyCompleted =
+        finalActiveExam.isSubmitted ||
+        finalExams.some((e) => e.id === activeId);
+
+      if (isLocalAlreadyCompleted) {
+        finalActiveExam = null;
+        saveActiveExam(null);
+      }
     }
 
     const payload = {

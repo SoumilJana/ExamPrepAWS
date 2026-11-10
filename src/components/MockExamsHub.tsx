@@ -122,7 +122,7 @@ export const MockExamsHub: React.FC<MockExamsHubProps> = ({
                     <div className="space-y-0.5">
                       <div className="flex items-center space-x-2.5">
                         <span className="font-medium text-[#f4f5f7]">
-                          Exam #{exam.examNumber}
+                          {exam.title || `Exam #${exam.examNumber}`}
                         </span>
                         <span
                           className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
@@ -145,7 +145,7 @@ export const MockExamsHub: React.FC<MockExamsHubProps> = ({
                           {result?.percentage}%
                         </div>
                         <div className="text-[11px] text-[#5e6573] font-mono">
-                          {result?.correctAnswers} / 65 correct
+                          {result?.correctAnswers} / {result?.totalQuestions || exam.questions?.length || 65} correct
                         </div>
                       </div>
 

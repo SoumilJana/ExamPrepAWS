@@ -60,6 +60,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const nowTime = new Date().setHours(0, 0, 0, 0);
   const diffDays = Math.ceil((targetTime - nowTime) / (1000 * 60 * 60 * 24));
 
+  const isExamResumable = Boolean(
+    activeExam &&
+    !activeExam.isSubmitted &&
+    !completedExams.some((e) => e.id === activeExam.id)
+  );
+
   return (
     <div className="max-w-6xl mx-auto px-3 sm:px-6 py-5 sm:py-10 space-y-6 sm:space-y-10 animate-in fade-in duration-200">
       
@@ -147,13 +153,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           {/* Right: Primary Call to Action & Summary */}
           <div className="flex flex-col sm:flex-row md:flex-col items-start md:items-end justify-between gap-4 border-t md:border-t-0 md:border-l border-white/[0.06] pt-5 md:pt-0 md:pl-8 shrink-0">
-            {activeExam && !activeExam.isSubmitted ? (
+            {isExamResumable && activeExam ? (
               <button
                 onClick={onResumeExam}
                 className="w-full sm:w-auto px-5 py-3 rounded-xl bg-[#fbbf24] hover:bg-[#f59e0b] text-[#090a0e] text-xs font-semibold flex items-center justify-center space-x-2 transition-all duration-150 btn-press shadow-lg shadow-[#fbbf24]/10"
               >
                 <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Resume Exam #{activeExam.examNumber} (Q{activeExam.currentQuestionIndex + 1})</span>
+                <span>Resume {activeExam.title || `Exam #${activeExam.examNumber}`} (Q{activeExam.currentQuestionIndex + 1})</span>
               </button>
             ) : (
               <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2 w-full sm:w-auto">
@@ -315,7 +321,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     <div className="space-y-0.5">
                       <div className="flex items-center space-x-2.5">
                         <span className="font-medium text-xs text-[#f4f5f7]">
-                          Exam #{exam.examNumber}
+                          {exam.title || `Exam #${exam.examNumber}`}
                         </span>
                         <span
                           className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
@@ -336,7 +342,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           {exam.result?.percentage}%
                         </div>
                         <div className="text-[11px] text-[#5e6573] font-mono">
-                          {exam.result?.correctAnswers} / 65 correct
+                          {exam.result?.correctAnswers} / {exam.result?.totalQuestions || exam.questions?.length || 65} correct
                         </div>
                       </div>
 

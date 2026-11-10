@@ -54,9 +54,7 @@ export const App: React.FC = () => {
     pullFromCloud(syncKey, (data) => {
       setCompletedExams(data.completedExams);
       setSettings(data.settings);
-      if (data.activeExam && !activeExam) {
-        setActiveExam(data.activeExam);
-      }
+      setActiveExam(data.activeExam);
       setMistakeVault(getMistakeVault());
     });
 
@@ -65,9 +63,7 @@ export const App: React.FC = () => {
       pullFromCloud(syncKey, (data) => {
         setCompletedExams(data.completedExams);
         setSettings(data.settings);
-        if (data.activeExam) {
-          setActiveExam(data.activeExam);
-        }
+        setActiveExam(data.activeExam);
         setMistakeVault(getMistakeVault());
       });
     });
@@ -126,7 +122,7 @@ export const App: React.FC = () => {
     toast.success(`${sprintSession.title || 'Sprint'} started (${sprintSession.questions.length} Questions • ${sprintSession.durationMinutes}m)`);
   };
 
-  const handleSubmitExam = (session: ExamSession) => {
+  const handleSubmitExam = async (session: ExamSession) => {
     const completed = submitExamSession(session);
     setActiveExam(null);
     setIsExamActive(false);
@@ -137,8 +133,11 @@ export const App: React.FC = () => {
     const updatedVault = recordExamMistakes(completed);
     setMistakeVault({ ...updatedVault });
 
+    // Explicitly clear active exam from cloud profile
+    await pushProfileToCloud(getSyncKey(), settings, null);
+
     // Instant sync to Supabase
-    pushExamToCloud(getSyncKey(), completed);
+    await pushExamToCloud(getSyncKey(), completed);
     toast.success('Examination submitted, graded, and synced to cloud.');
   };
 
