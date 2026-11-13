@@ -1,6 +1,6 @@
 import { supabase } from './supabaseClient';
 import { AppSettings, ExamSession } from '../types';
-import { getCompletedExams, getSettings, saveCompletedExam, saveSettings, getActiveExam, saveActiveExam } from './storage';
+import { getCompletedExams, getSettings, saveCompletedExam, saveSettings, getActiveExam, saveActiveExam, hydrateExamQuestions } from './storage';
 
 const SYNC_KEY_STORAGE = 'cloudprep_sync_key';
 const DEFAULT_SYNC_KEY = 'soumil-prep';
@@ -66,12 +66,23 @@ export const pushExamToCloud = async (syncKey: string, exam: ExamSession) => {
     // Explicitly clear active_exam in cloud profile since it is now submitted
     await pushProfileToCloud(syncKey, getSettings(), null);
 
+    const questionIds = exam.questions?.map((q) => q.id) || exam.questionIds || [];
+    const enrichedResult = exam.result
+      ? {
+          ...exam.result,
+          questionIds: exam.result.questionIds || questionIds,
+          title: exam.result.title || exam.title,
+          isSprint: exam.result.isSprint ?? exam.isSprint,
+          sprintCategory: exam.result.sprintCategory || exam.sprintCategory,
+        }
+      : null;
+
     const { error } = await supabase.from('completed_exams').upsert({
       id: exam.id,
       sync_key: syncKey,
       exam_number: exam.examNumber,
       seed: exam.seed,
-      result: exam.result,
+      result: enrichedResult,
       answers: exam.answers,
       flagged_question_ids: exam.flaggedQuestionIds || [],
       start_time: exam.startTime,
@@ -118,45 +129,52 @@ export const pullFromCloud = async (
       return null;
     }
 
-    // Parse remote exams
-    const remoteExams: ExamSession[] = (examsData || []).map((row: any) => ({
-      id: row.id,
-      examNumber: row.exam_number,
-      seed: Number(row.seed),
-      questions: [], // Loaded locally from question bank by session ID if needed
-      answers: row.answers,
-      flaggedQuestionIds: row.flagged_question_ids || [],
-      currentQuestionIndex: 0,
-      startTime: Number(row.start_time),
-      durationMinutes: row.duration_minutes,
-      isSubmitted: row.is_submitted,
-      submittedAt: Number(row.submitted_at),
-      result: row.result,
-    }));
+    // Parse remote exams and hydrate questions from question bank
+    const remoteExams: ExamSession[] = (examsData || []).map((row: any) => {
+      const rawSession: ExamSession = {
+        id: row.id,
+        examNumber: row.exam_number,
+        seed: Number(row.seed),
+        questions: [],
+        answers: row.answers || {},
+        flaggedQuestionIds: row.flagged_question_ids || [],
+        currentQuestionIndex: 0,
+        startTime: Number(row.start_time),
+        durationMinutes: row.duration_minutes,
+        isSubmitted: row.is_submitted,
+        submittedAt: Number(row.submitted_at),
+        result: row.result,
+        questionIds: row.result?.questionIds,
+        title: row.result?.title,
+        isSprint: row.result?.isSprint,
+        sprintCategory: row.result?.sprintCategory,
+      };
+      return hydrateExamQuestions(rawSession);
+    });
 
     // Merge with local completed exams
     const localExams = getCompletedExams();
     const mergedMap = new Map<string, ExamSession>();
 
-    // Add local exams
-    localExams.forEach((e) => mergedMap.set(e.id, e));
+    // Add local exams (already hydrated)
+    localExams.forEach((e) => mergedMap.set(e.id, hydrateExamQuestions(e)));
 
-    // Upsert remote exams (preserve questions if local has them, else rely on result/answers)
+    // Upsert remote exams (preserve questions if local has them, else use remote hydrated)
     remoteExams.forEach((remote) => {
       const existing = mergedMap.get(remote.id);
-      if (existing) {
+      if (existing && existing.questions && existing.questions.length > 0) {
         mergedMap.set(remote.id, {
           ...remote,
-          questions: existing.questions.length > 0 ? existing.questions : remote.questions,
+          questions: existing.questions,
         });
       } else {
         mergedMap.set(remote.id, remote);
       }
     });
 
-    const finalExams = Array.from(mergedMap.values()).sort(
-      (a, b) => (b.submittedAt || 0) - (a.submittedAt || 0)
-    );
+    const finalExams = Array.from(mergedMap.values())
+      .map(hydrateExamQuestions)
+      .sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
 
     // Save merged exams to local storage
     localStorage.setItem('cloudprep_completed_exams', JSON.stringify(finalExams));

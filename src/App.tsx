@@ -18,6 +18,7 @@ import {
   getCompletedExams,
   getQuestionBank,
   getSettings,
+  hydrateExamQuestions,
 } from './services/storage';
 import { generateNewExam, submitExamSession } from './services/examEngine';
 import {
@@ -148,7 +149,7 @@ export const App: React.FC = () => {
   };
 
   const handleViewResults = (exam: ExamSession) => {
-    setViewingResultsSession(exam);
+    setViewingResultsSession(hydrateExamQuestions(exam));
   };
 
   const handleRetakeFromResults = () => {

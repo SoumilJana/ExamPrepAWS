@@ -48,6 +48,10 @@ export interface ExamResult {
   passed: boolean;
   timeSpentSeconds: number;
   domainScores: DomainScore[];
+  questionIds?: string[];
+  title?: string;
+  isSprint?: boolean;
+  sprintCategory?: string;
 }
 
 export interface ExamSession {
@@ -57,6 +61,7 @@ export interface ExamSession {
   title?: string;
   isSprint?: boolean;
   sprintCategory?: string;
+  questionIds?: string[];
   questions: Question[];
   answers: Record<string, string[]>; // questionId -> selectedOptionIds
   flaggedQuestionIds: string[];

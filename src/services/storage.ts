@@ -30,47 +30,6 @@ export const saveSettings = (settings: AppSettings): void => {
   localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
 };
 
-export const getCompletedExams = (): ExamSession[] => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.COMPLETED_EXAMS);
-    if (!raw) {
-      return [];
-    }
-    const parsed: ExamSession[] = JSON.parse(raw);
-    // Purge any legacy demo exam records
-    const cleaned = parsed.filter((e) => !e.id.startsWith('exam-sample-'));
-    if (cleaned.length !== parsed.length) {
-      localStorage.setItem(STORAGE_KEYS.COMPLETED_EXAMS, JSON.stringify(cleaned));
-    }
-    return cleaned;
-  } catch {
-    return [];
-  }
-};
-
-export const saveCompletedExam = (exam: ExamSession): void => {
-  const current = getCompletedExams();
-  const updated = [exam, ...current.filter((e) => e.id !== exam.id)];
-  localStorage.setItem(STORAGE_KEYS.COMPLETED_EXAMS, JSON.stringify(updated));
-};
-
-export const getActiveExam = (): ExamSession | null => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.ACTIVE_EXAM);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-};
-
-export const saveActiveExam = (exam: ExamSession | null): void => {
-  if (!exam) {
-    localStorage.removeItem(STORAGE_KEYS.ACTIVE_EXAM);
-  } else {
-    localStorage.setItem(STORAGE_KEYS.ACTIVE_EXAM, JSON.stringify(exam));
-  }
-};
-
 export const getQuestionBank = (): Question[] => {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.QUESTION_BANK);
@@ -87,6 +46,143 @@ export const getQuestionBank = (): Question[] => {
     return parsed;
   } catch {
     return INITIAL_QUESTIONS;
+  }
+};
+
+/**
+ * Hydrates an ExamSession to ensure questions are fully populated from the Question Bank.
+ * Handles cases where sessions were stored in Supabase/localStorage with only question IDs or answers.
+ */
+export const hydrateExamQuestions = (exam: ExamSession): ExamSession => {
+  if (!exam) return exam;
+
+  const bank = getQuestionBank();
+  const bankMap = new Map<string, Question>();
+  bank.forEach((q) => bankMap.set(q.id, q));
+
+  // If questions already populated and valid, return with questionIds recorded
+  if (exam.questions && exam.questions.length > 0 && exam.questions[0]?.questionText) {
+    return {
+      ...exam,
+      questionIds: exam.questionIds || exam.questions.map((q) => q.id),
+      title: exam.title || exam.result?.title || `Exam #${exam.examNumber}`,
+      isSprint: exam.isSprint ?? exam.result?.isSprint ?? (exam.durationMinutes < 90 || (exam.result && exam.result.totalQuestions < 65)),
+    };
+  }
+
+  // 1. Try explicit questionIds list (from exam or result)
+  const explicitIds: string[] =
+    (exam.questionIds && exam.questionIds.length > 0)
+      ? exam.questionIds
+      : (exam.result?.questionIds && exam.result.questionIds.length > 0)
+      ? exam.result.questionIds
+      : [];
+
+  let resolvedQuestions: Question[] = [];
+
+  if (explicitIds.length > 0) {
+    resolvedQuestions = explicitIds
+      .map((id) => bankMap.get(id))
+      .filter((q): q is Question => q !== undefined);
+  }
+
+  // 2. Recover any answered questions not already in the list
+  if (exam.answers) {
+    const answeredIds = Object.keys(exam.answers);
+    answeredIds.forEach((id) => {
+      const q = bankMap.get(id);
+      if (q && !resolvedQuestions.some((rq) => rq.id === id)) {
+        resolvedQuestions.push(q);
+      }
+    });
+  }
+
+  // Also include flagged questions if any
+  if (exam.flaggedQuestionIds && exam.flaggedQuestionIds.length > 0) {
+    exam.flaggedQuestionIds.forEach((id) => {
+      const q = bankMap.get(id);
+      if (q && !resolvedQuestions.some((rq) => rq.id === id)) {
+        resolvedQuestions.push(q);
+      }
+    });
+  }
+
+  // 3. If there are unanswered questions in the exam that were not in answers,
+  // reconstruct them matching the domain distribution so totalQuestions matches!
+  if (exam.result && resolvedQuestions.length < exam.result.totalQuestions) {
+    const existingIds = new Set(resolvedQuestions.map((q) => q.id));
+
+    const missingDomains: ('domain-1' | 'domain-2' | 'domain-3' | 'domain-4')[] = [];
+    if (exam.result.domainScores && exam.result.domainScores.length > 0) {
+      exam.result.domainScores.forEach((ds) => {
+        const inResolved = resolvedQuestions.filter((q) => q.domainId === ds.domainId).length;
+        const missingInDomain = ds.total - inResolved;
+        for (let i = 0; i < missingInDomain; i++) {
+          missingDomains.push(ds.domainId);
+        }
+      });
+    }
+
+    missingDomains.forEach((dId) => {
+      const candidate = bank.find((q) => q.domainId === dId && !existingIds.has(q.id));
+      if (candidate) {
+        resolvedQuestions.push(candidate);
+        existingIds.add(candidate.id);
+      }
+    });
+  }
+
+  return {
+    ...exam,
+    title: exam.title || exam.result?.title || `Exam #${exam.examNumber}`,
+    isSprint: exam.isSprint ?? exam.result?.isSprint ?? (exam.durationMinutes < 90 || (exam.result && exam.result.totalQuestions < 65)),
+    sprintCategory: exam.sprintCategory || exam.result?.sprintCategory,
+    questionIds: resolvedQuestions.map((q) => q.id),
+    questions: resolvedQuestions,
+  };
+};
+
+export const getCompletedExams = (): ExamSession[] => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.COMPLETED_EXAMS);
+    if (!raw) {
+      return [];
+    }
+    const parsed: ExamSession[] = JSON.parse(raw);
+    // Purge any legacy demo exam records and hydrate questions
+    const cleaned = parsed
+      .filter((e) => !e.id.startsWith('exam-sample-'))
+      .map(hydrateExamQuestions);
+    if (cleaned.length !== parsed.length) {
+      localStorage.setItem(STORAGE_KEYS.COMPLETED_EXAMS, JSON.stringify(cleaned));
+    }
+    return cleaned;
+  } catch {
+    return [];
+  }
+};
+
+export const saveCompletedExam = (exam: ExamSession): void => {
+  const hydrated = hydrateExamQuestions(exam);
+  const current = getCompletedExams();
+  const updated = [hydrated, ...current.filter((e) => e.id !== hydrated.id)];
+  localStorage.setItem(STORAGE_KEYS.COMPLETED_EXAMS, JSON.stringify(updated));
+};
+
+export const getActiveExam = (): ExamSession | null => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.ACTIVE_EXAM);
+    return raw ? hydrateExamQuestions(JSON.parse(raw)) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const saveActiveExam = (exam: ExamSession | null): void => {
+  if (!exam) {
+    localStorage.removeItem(STORAGE_KEYS.ACTIVE_EXAM);
+  } else {
+    localStorage.setItem(STORAGE_KEYS.ACTIVE_EXAM, JSON.stringify(hydrateExamQuestions(exam)));
   }
 };
 

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ArrowLeft, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
 import { ExamSession } from '../types';
 import { AWS_DOMAINS, PASSING_PERCENTAGE } from '../data/domains';
+import { hydrateExamQuestions } from '../services/storage';
 
 interface ResultsViewProps {
   session: ExamSession;
@@ -12,10 +13,11 @@ interface ResultsViewProps {
 type FilterTab = 'all' | 'incorrect' | 'correct' | 'unanswered' | 'flagged';
 
 export const ResultsView: React.FC<ResultsViewProps> = ({
-  session,
+  session: rawSession,
   onRetakeExam,
   onBackToDashboard,
 }) => {
+  const session = useMemo(() => hydrateExamQuestions(rawSession), [rawSession]);
   const [activeFilter, setActiveFilter] = useState<FilterTab>('all');
   const [expandedExplanations, setExpandedExplanations] = useState<Record<string, boolean>>({});
 

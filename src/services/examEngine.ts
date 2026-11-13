@@ -41,6 +41,9 @@ export const generateNewExam = (): ExamSession => {
     id: `exam-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     examNumber: nextExamNumber,
     seed: Date.now(),
+    title: `Exam #${nextExamNumber}`,
+    isSprint: false,
+    questionIds: randomizedExamQuestions.map((q) => q.id),
     questions: randomizedExamQuestions,
     answers: {},
     flaggedQuestionIds: [],
@@ -118,6 +121,10 @@ export const gradeExam = (session: ExamSession): ExamResult => {
     passed,
     timeSpentSeconds: elapsedSeconds,
     domainScores,
+    questionIds: session.questions.map((q) => q.id),
+    title: session.title,
+    isSprint: session.isSprint,
+    sprintCategory: session.sprintCategory,
   };
 };
 
@@ -128,6 +135,7 @@ export const submitExamSession = (session: ExamSession): ExamSession => {
     isSubmitted: true,
     submittedAt: Date.now(),
     result,
+    questionIds: session.questions.map((q) => q.id),
   };
 
   // Save to completed exams and clear active
