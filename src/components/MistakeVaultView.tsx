@@ -107,62 +107,62 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pb-4 border-b border-white/[0.06]">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold text-[#f4f5f7] tracking-tight flex items-center space-x-2">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-[#f4f5f7] tracking-tight flex items-center space-x-2.5">
             <span>Mistake Vault</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#6d8aff]/10 text-[#6d8aff] border border-[#6d8aff]/20 font-medium">
+            <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#6d8aff]/10 text-[#6d8aff] border border-[#6d8aff]/20 font-semibold">
               Spaced Repetition
             </span>
           </h1>
-          <p className="text-xs text-[#9ea5b3] mt-0.5">
+          <p className="text-sm text-[#9ea5b3] mt-1">
             Every question missed during exams is quarantined here until answered correctly twice in a row.
           </p>
         </div>
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
-        <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 space-y-1.5 card-highlight">
-          <div className="text-[#9ea5b3]">Active Mistakes</div>
-          <div className="text-2xl font-semibold font-mono text-[#f87171]">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-sm">
+        <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 sm:p-6 space-y-2 card-highlight">
+          <div className="text-[#9ea5b3] font-medium">Active Mistakes</div>
+          <div className="text-3xl font-semibold font-mono text-[#f87171]">
             {stats.activeCount}
           </div>
-          <div className="text-[11px] text-[#5e6573]">Needs 2/2 streaks to graduate</div>
+          <div className="text-xs text-[#9ea5b3]">Needs 2/2 streaks to graduate</div>
         </div>
 
-        <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 space-y-1.5 card-highlight">
-          <div className="text-[#9ea5b3]">Graduated / Mastered</div>
-          <div className="text-2xl font-semibold font-mono text-[#34d399]">
+        <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 sm:p-6 space-y-2 card-highlight">
+          <div className="text-[#9ea5b3] font-medium">Graduated / Mastered</div>
+          <div className="text-3xl font-semibold font-mono text-[#34d399]">
             {stats.masteredCount}
           </div>
-          <div className="text-[11px] text-[#5e6573]">Answered correctly 2x in a row</div>
+          <div className="text-xs text-[#9ea5b3]">Answered correctly 2x in a row</div>
         </div>
 
-        <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 space-y-1.5 card-highlight">
-          <div className="text-[#9ea5b3]">Vault Graduation Rate</div>
-          <div className="text-2xl font-semibold font-mono text-[#6d8aff]">
+        <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 sm:p-6 space-y-2 card-highlight">
+          <div className="text-[#9ea5b3] font-medium">Vault Graduation Rate</div>
+          <div className="text-3xl font-semibold font-mono text-[#6d8aff]">
             {stats.graduationRate}%
           </div>
-          <div className="text-[11px] text-[#5e6573]">Target: &gt; 80% before exam day</div>
+          <div className="text-xs text-[#9ea5b3]">Target: &gt; 80% before exam day</div>
         </div>
 
-        <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 space-y-1.5 card-highlight">
-          <div className="text-[#9ea5b3]">Total Tracked</div>
-          <div className="text-2xl font-semibold font-mono text-[#f4f5f7]">
+        <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 sm:p-6 space-y-2 card-highlight">
+          <div className="text-[#9ea5b3] font-medium">Total Tracked</div>
+          <div className="text-3xl font-semibold font-mono text-[#f4f5f7]">
             {stats.totalTracked}
           </div>
-          <div className="text-[11px] text-[#5e6573]">Distinct questions missed</div>
+          <div className="text-xs text-[#9ea5b3]">Distinct questions missed</div>
         </div>
       </div>
 
       {/* Launch Drill Console */}
-      <div className="bg-[#111318] border border-white/[0.08] rounded-2xl p-6 space-y-4 card-highlight relative overflow-hidden">
+      <div className="bg-[#111318] border border-white/[0.08] rounded-2xl p-6 sm:p-7 space-y-5 card-highlight relative overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <h2 className="text-sm font-semibold text-[#f4f5f7] flex items-center space-x-2">
-              <Sparkles className="w-4 h-4 text-[#6d8aff]" />
+            <h2 className="text-base sm:text-lg font-semibold text-[#f4f5f7] flex items-center space-x-2">
+              <Sparkles className="w-5 h-5 text-[#6d8aff]" />
               <span>Launch Focused Mistake Drill</span>
             </h2>
-            <p className="text-xs text-[#9ea5b3]">
+            <p className="text-sm text-[#9ea5b3]">
               Re-test yourself with instant feedback. Correct answers build towards the 2-in-a-row graduation goal.
             </p>
           </div>
@@ -170,21 +170,21 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
           <button
             onClick={handleLaunchDrill}
             disabled={activeDrillCandidates.length === 0}
-            className="flex items-center justify-center space-x-2 px-6 py-2.5 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-xs rounded-xl transition-colors disabled:opacity-30 disabled:pointer-events-none btn-press shadow-md shadow-[#6d8aff]/20 shrink-0"
+            className="flex items-center justify-center space-x-2 px-6 py-3 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-sm rounded-xl transition-colors disabled:opacity-30 disabled:pointer-events-none btn-press shadow-md shadow-[#6d8aff]/20 shrink-0"
           >
-            <Play className="w-3.5 h-3.5 fill-current" />
+            <Play className="w-4 h-4 fill-current" />
             <span>Start Drill ({activeDrillCandidates.length} Qs)</span>
           </button>
         </div>
 
         {/* Drill Controls */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs">
-          <div className="space-y-1">
-            <label className="text-[11px] text-[#9ea5b3]">Filter by Domain</label>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-sm">
+          <div className="space-y-1.5">
+            <label className="text-xs text-[#9ea5b3] font-medium">Filter by Domain</label>
             <select
               value={drillDomain}
               onChange={(e) => setDrillDomain(e.target.value)}
-              className="w-full px-3 py-2 bg-[#090a0e] border border-white/[0.07] rounded-xl text-xs text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff]"
+              className="w-full px-3.5 py-2.5 bg-[#090a0e] border border-white/[0.07] rounded-xl text-sm text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff]"
             >
               <option value="all">All Domains ({stats.activeCount} active)</option>
               {(Object.keys(AWS_DOMAINS) as DomainId[]).map((dId) => {
@@ -198,12 +198,12 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
             </select>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[11px] text-[#9ea5b3]">Session Length</label>
+          <div className="space-y-1.5">
+            <label className="text-xs text-[#9ea5b3] font-medium">Session Length</label>
             <select
               value={drillLimit}
               onChange={(e) => setDrillLimit(parseInt(e.target.value, 10))}
-              className="w-full px-3 py-2 bg-[#090a0e] border border-white/[0.07] rounded-xl text-xs text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff]"
+              className="w-full px-3.5 py-2.5 bg-[#090a0e] border border-white/[0.07] rounded-xl text-sm text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff]"
             >
               <option value={0}>All Available Questions</option>
               <option value={10}>Quick Blitz (10 Questions)</option>
@@ -214,26 +214,26 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
       </div>
 
       {/* Filter Row */}
-      <div className="flex flex-col sm:flex-row gap-3 text-xs">
+      <div className="flex flex-col sm:flex-row gap-3 text-sm">
         <div className="flex-1 relative">
-          <Search className="w-3.5 h-3.5 text-[#5e6573] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#5e6573] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search your mistakes..."
-            className="w-full pl-9 pr-3 py-2 bg-[#111318] border border-white/[0.07] rounded-xl text-xs text-[#f4f5f7] placeholder-[#5e6573] focus:outline-none focus:border-[#6d8aff] card-highlight"
+            className="w-full pl-10 pr-3.5 py-2.5 bg-[#111318] border border-white/[0.07] rounded-xl text-sm text-[#f4f5f7] placeholder-[#5e6573] focus:outline-none focus:border-[#6d8aff] card-highlight"
           />
         </div>
 
         <div className="flex items-center space-x-2">
           {/* Status Tabs */}
-          <div className="flex bg-[#111318] border border-white/[0.07] rounded-xl p-0.5 text-[11px]">
+          <div className="flex bg-[#111318] border border-white/[0.07] rounded-xl p-1 text-xs sm:text-sm font-medium">
             <button
               onClick={() => setSelectedStatus('active')}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${
+              className={`px-3.5 py-1.5 rounded-lg transition-colors ${
                 selectedStatus === 'active'
-                  ? 'bg-white/[0.08] text-[#f4f5f7] font-medium'
+                  ? 'bg-white/[0.08] text-[#f4f5f7] font-semibold'
                   : 'text-[#9ea5b3] hover:text-[#f4f5f7]'
               }`}
             >
@@ -241,9 +241,9 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
             </button>
             <button
               onClick={() => setSelectedStatus('mastered')}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${
+              className={`px-3.5 py-1.5 rounded-lg transition-colors ${
                 selectedStatus === 'mastered'
-                  ? 'bg-white/[0.08] text-[#f4f5f7] font-medium'
+                  ? 'bg-white/[0.08] text-[#f4f5f7] font-semibold'
                   : 'text-[#9ea5b3] hover:text-[#f4f5f7]'
               }`}
             >
@@ -251,9 +251,9 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
             </button>
             <button
               onClick={() => setSelectedStatus('all')}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${
+              className={`px-3.5 py-1.5 rounded-lg transition-colors ${
                 selectedStatus === 'all'
-                  ? 'bg-white/[0.08] text-[#f4f5f7] font-medium'
+                  ? 'bg-white/[0.08] text-[#f4f5f7] font-semibold'
                   : 'text-[#9ea5b3] hover:text-[#f4f5f7]'
               }`}
             >
@@ -264,7 +264,7 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
           <select
             value={selectedDomain}
             onChange={(e) => setSelectedDomain(e.target.value)}
-            className="px-3 py-2 bg-[#111318] border border-white/[0.07] rounded-xl text-xs text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff] card-highlight"
+            className="px-3.5 py-2 bg-[#111318] border border-white/[0.07] rounded-xl text-sm text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff] card-highlight"
           >
             <option value="all">All Domains</option>
             {(Object.keys(AWS_DOMAINS) as DomainId[]).map((dId) => (
@@ -279,13 +279,13 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
       {/* Mistake List */}
       <div className="bg-[#111318] border border-white/[0.06] rounded-2xl overflow-hidden card-highlight">
         {filteredList.length === 0 ? (
-          <div className="p-12 text-center text-xs text-[#9ea5b3] space-y-2">
+          <div className="p-12 text-center text-sm text-[#9ea5b3] space-y-2">
             {stats.totalTracked === 0 ? (
               <>
                 <p>No mistakes recorded yet!</p>
                 <button
                   onClick={() => onNavigateTab('mock-exams')}
-                  className="text-[#6d8aff] hover:underline"
+                  className="text-[#6d8aff] hover:underline font-medium"
                 >
                   Complete your first mock examination
                 </button>
@@ -295,7 +295,7 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
             )}
           </div>
         ) : (
-          <div className="divide-y divide-white/[0.04] text-xs">
+          <div className="divide-y divide-white/[0.04]">
             {filteredList.map(({ rec, question }) => {
               const domain = AWS_DOMAINS[question.domainId];
               const isMastered = rec.consecutiveCorrect >= 2;
@@ -304,19 +304,19 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
                 <div
                   key={question.id}
                   onClick={() => setActiveQuestion(question)}
-                  className="p-4 flex items-center justify-between hover:bg-white/[0.02] cursor-pointer transition-colors group"
+                  className="p-4 sm:p-5 flex items-center justify-between hover:bg-white/[0.02] cursor-pointer transition-colors group"
                 >
                   <div className="space-y-1.5 max-w-[85%]">
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#5e6573]">
-                      <span className="font-mono text-[#6d8aff] font-medium">{question.id}</span>
+                    <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-[#9ea5b3]">
+                      <span className="font-mono text-[#6d8aff] font-semibold">{question.id}</span>
                       <span>•</span>
-                      <span>{domain.name}</span>
+                      <span className="text-[#f4f5f7] font-medium">{domain.name}</span>
                       <span>•</span>
                       <span>Missed {rec.totalIncorrect}x</span>
                       <span>•</span>
                       {/* Streak Badge */}
                       <span
-                        className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-medium border ${
+                        className={`px-2.5 py-0.5 rounded-full font-mono text-xs font-semibold border ${
                           isMastered
                             ? 'bg-[#34d399]/10 text-[#34d399] border-[#34d399]/20'
                             : rec.consecutiveCorrect === 1
@@ -328,13 +328,13 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
                       </span>
                     </div>
 
-                    <div className="text-xs text-[#f4f5f7] font-normal line-clamp-2">
+                    <div className="text-sm sm:text-base text-[#f4f5f7] font-normal leading-relaxed line-clamp-2">
                       {question.questionText}
                     </div>
                   </div>
 
                   <span className="text-[#5e6573] group-hover:text-[#f4f5f7] transition-colors pr-2 shrink-0">
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-5 h-5" />
                   </span>
                 </div>
               );
@@ -346,57 +346,59 @@ export const MistakeVaultView: React.FC<MistakeVaultViewProps> = ({
       {/* Question Details Drawer */}
       {activeQuestion && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-150">
-          <div className="bg-[#14161b] border border-white/[0.1] rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5 max-h-[85vh] overflow-y-auto text-xs card-highlight-elevated">
+          <div className="bg-[#14161b] border border-white/[0.1] rounded-2xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl space-y-5 max-h-[85vh] overflow-y-auto card-highlight-elevated">
             
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-              <div className="flex items-center space-x-2 text-xs">
-                <span className="font-mono text-[#6d8aff] font-semibold">{activeQuestion.id}</span>
+              <div className="flex items-center space-x-2 text-sm">
+                <span className="font-mono text-[#6d8aff] font-bold sm:text-base">{activeQuestion.id}</span>
                 <span className="text-white/20">•</span>
-                <span className="text-[#9ea5b3]">{AWS_DOMAINS[activeQuestion.domainId].name}</span>
+                <span className="text-[#f4f5f7] font-medium">{AWS_DOMAINS[activeQuestion.domainId].name}</span>
               </div>
               <button
                 onClick={() => setActiveQuestion(null)}
-                className="text-[#9ea5b3] hover:text-[#f4f5f7]"
+                className="text-[#9ea5b3] hover:text-[#f4f5f7] p-1.5"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="text-sm font-normal text-[#f4f5f7] leading-relaxed">
+            <div className="text-base sm:text-lg font-normal text-[#f4f5f7] leading-[1.65]">
               {activeQuestion.questionText}
             </div>
 
-            <div className="space-y-1.5 pt-1">
+            <div className="space-y-2 pt-1 text-sm sm:text-base">
               {activeQuestion.options.map((opt) => {
                 const isCorrect = activeQuestion.correctOptionIds.includes(opt.id);
                 return (
                   <div
                     key={opt.id}
-                    className={`p-3 rounded-xl border flex items-start space-x-3 ${
+                    className={`p-3.5 sm:p-4 rounded-xl border flex items-start space-x-3.5 ${
                       isCorrect
                         ? 'border-[#34d399]/40 bg-[#34d399]/5 text-[#f4f5f7]'
                         : 'border-white/[0.05] bg-[#090a0e] text-[#9ea5b3]'
                     }`}
                   >
-                    <span className="font-mono font-medium shrink-0 mt-0.5">{opt.id}.</span>
-                    <span className="flex-1">{opt.text}</span>
+                    <span className="font-mono font-bold shrink-0 mt-0.5">{opt.id}.</span>
+                    <span className="flex-1 leading-relaxed">{opt.text}</span>
                     {isCorrect && (
-                      <span className="text-[11px] text-[#34d399] font-medium shrink-0">Correct Key</span>
+                      <span className="text-xs text-[#34d399] font-semibold px-2 py-0.5 rounded bg-[#34d399]/10 border border-[#34d399]/20 shrink-0">
+                        Correct Key
+                      </span>
                     )}
                   </div>
                 );
               })}
             </div>
 
-            <div className="pt-3 border-t border-white/[0.06] space-y-1.5 text-[#9ea5b3]">
-              <div className="text-[#f4f5f7] font-medium text-[11px]">Architecture Rationale</div>
-              <p className="leading-relaxed whitespace-pre-line">{activeQuestion.explanation}</p>
+            <div className="pt-4 border-t border-white/[0.06] space-y-2 text-sm sm:text-[15px] text-[#9ea5b3]">
+              <div className="text-[#f4f5f7] font-semibold text-sm sm:text-base">Architecture Rationale</div>
+              <p className="leading-relaxed whitespace-pre-line text-[#c2c8d4]">{activeQuestion.explanation}</p>
             </div>
 
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setActiveQuestion(null)}
-                className="px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] rounded-lg transition-colors btn-press border border-white/[0.06]"
+                className="px-5 py-2.5 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] font-semibold text-sm rounded-xl transition-colors btn-press border border-white/[0.06]"
               >
                 Close
               </button>

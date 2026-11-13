@@ -67,50 +67,50 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
       
       {/* Header */}
       <div className="pb-4 border-b border-white/[0.06]">
-        <h1 className="text-xl sm:text-2xl font-semibold text-[#f4f5f7] tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[#f4f5f7] tracking-tight">
           Performance Analytics
         </h1>
-        <p className="text-xs text-[#9ea5b3] mt-0.5">
+        <p className="text-sm text-[#9ea5b3] mt-1">
           Longitudinal progress tracking and domain mastery
         </p>
       </div>
 
       {/* Aggregate Strip */}
-      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-xs card-highlight">
-        <div className="space-y-1">
-          <div className="text-[#9ea5b3]">Average Score</div>
-          <div className="text-2xl font-semibold font-mono text-[#f4f5f7]">{avgScore}%</div>
-          <div className="text-[11px] text-[#5e6573] font-mono">{totalAttempts} mock tests</div>
+      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 sm:p-7 grid grid-cols-2 sm:grid-cols-4 gap-6 text-sm card-highlight">
+        <div className="space-y-1.5">
+          <div className="text-[#9ea5b3] font-medium">Average Score</div>
+          <div className="text-3xl font-semibold font-mono text-[#f4f5f7]">{avgScore}%</div>
+          <div className="text-xs text-[#9ea5b3] font-mono">{totalAttempts} mock tests</div>
         </div>
 
-        <div className="space-y-1">
-          <div className="text-[#9ea5b3]">Score Range</div>
-          <div className="text-2xl font-semibold font-mono text-[#f4f5f7]">{highestScore}%</div>
-          <div className="text-[11px] text-[#5e6573] font-mono">Lowest: {lowestScore}%</div>
+        <div className="space-y-1.5">
+          <div className="text-[#9ea5b3] font-medium">Score Range</div>
+          <div className="text-3xl font-semibold font-mono text-[#f4f5f7]">{highestScore}%</div>
+          <div className="text-xs text-[#9ea5b3] font-mono">Lowest: {lowestScore}%</div>
         </div>
 
-        <div className="space-y-1">
-          <div className="text-[#9ea5b3]">Average Pace</div>
-          <div className="text-2xl font-semibold font-mono text-[#f4f5f7]">{avgSecondsPerQ}s</div>
-          <div className="text-[11px] text-[#5e6573] font-mono">per question (target &lt; 83s)</div>
+        <div className="space-y-1.5">
+          <div className="text-[#9ea5b3] font-medium">Average Pace</div>
+          <div className="text-3xl font-semibold font-mono text-[#f4f5f7]">{avgSecondsPerQ}s</div>
+          <div className="text-xs text-[#9ea5b3] font-mono">per question (target &lt; 83s)</div>
         </div>
 
-        <div className="space-y-1">
-          <div className="text-[#9ea5b3]">Question Coverage</div>
-          <div className="text-2xl font-semibold font-mono text-[#f4f5f7]">{coveragePercentage}%</div>
-          <div className="text-[11px] text-[#5e6573] font-mono">{seenIds.size} of {totalBankQuestions} questions</div>
+        <div className="space-y-1.5">
+          <div className="text-[#9ea5b3] font-medium">Question Coverage</div>
+          <div className="text-3xl font-semibold font-mono text-[#f4f5f7]">{coveragePercentage}%</div>
+          <div className="text-xs text-[#9ea5b3] font-mono">{seenIds.size} of {totalBankQuestions} questions</div>
         </div>
       </div>
 
       {/* Progression Bar Chart */}
-      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 space-y-4 card-highlight">
-        <div className="flex items-center justify-between text-xs">
-          <h2 className="font-semibold text-[#f4f5f7]">Score Trajectory</h2>
-          <span className="text-[#5e6573] font-mono text-[11px]">72% pass target</span>
+      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 sm:p-7 space-y-4 card-highlight">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base sm:text-lg font-semibold text-[#f4f5f7]">Score Trajectory</h2>
+          <span className="text-[#9ea5b3] font-mono text-xs sm:text-sm">72% pass target</span>
         </div>
 
         {completedExams.length === 0 ? (
-          <div className="h-44 flex items-center justify-center text-xs text-[#9ea5b3]">
+          <div className="h-44 flex items-center justify-center text-sm text-[#9ea5b3]">
             Complete mock exams to generate progression trend.
           </div>
         ) : (
@@ -132,12 +132,12 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
                     className="flex-1 flex flex-col items-center justify-end h-full group relative"
                   >
                     <div
-                      className={`w-full max-w-[36px] rounded-t transition-all ${
+                      className={`w-full max-w-[40px] rounded-t transition-all ${
                         passed ? 'bg-[#6d8aff] hover:bg-[#839cff]' : 'bg-[#f87171]/80 hover:bg-[#f87171]'
                       }`}
                       style={{ height: `${score}%` }}
                     />
-                    <span className="text-[10px] text-[#5e6573] font-mono mt-2">
+                    <span className="text-xs text-[#9ea5b3] font-mono mt-2 font-medium">
                       #{exam.examNumber}
                     </span>
                   </div>
@@ -148,20 +148,20 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
       </div>
 
       {/* Domain Breakdown */}
-      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 space-y-4 card-highlight">
-        <h2 className="text-xs font-semibold text-[#f4f5f7]">Cumulative Domain Mastery</h2>
+      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 sm:p-7 space-y-5 card-highlight">
+        <h2 className="text-base sm:text-lg font-semibold text-[#f4f5f7]">Cumulative Domain Mastery</h2>
 
         <div className="space-y-4 pt-1">
           {domainStats.map((ds) => (
-            <div key={ds.id} className="space-y-1.5 text-xs">
+            <div key={ds.id} className="space-y-2 text-sm sm:text-base">
               <div className="flex items-center justify-between">
                 <span className="text-[#f4f5f7] font-medium">{ds.name}</span>
-                <span className="font-mono text-[#9ea5b3]">
+                <span className="font-mono text-[#f4f5f7] font-semibold text-sm">
                   {ds.correct}/{ds.total} ({ds.percentage}%)
                 </span>
               </div>
 
-              <div className="h-1.5 w-full bg-[#090a0e] rounded-full overflow-hidden">
+              <div className="h-2 w-full bg-[#090a0e] rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${
                     ds.percentage >= PASSING_PERCENTAGE ? 'bg-[#34d399]' : 'bg-[#f87171]'

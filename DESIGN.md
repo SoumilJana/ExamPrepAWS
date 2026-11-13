@@ -47,16 +47,17 @@ All values strictly preserve the requested dark palette and accessibility contra
 ## 3. Typography Hierarchy
 
 - **Font Family:** `Inter`, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif
-- **Code / Monospace / Numbers:** `JetBrains Mono`, `SFMono-Regular`, Menlo, monospace with `font-variant-numeric: tabular-nums` for timers and scores.
+- **Code / Monospace / Numbers:** `JetBrains Mono`, `SFMono-Regular`, Menlo, monospace with `font-variant-numeric: tabular-nums` for timers, IDs, and scores.
 
-### Scale:
-- `Display / Page Title`: 24px (1.5rem), Semibold (600), Line height 1.25, tracking -0.015em
-- `Section Header`: 18px (1.125rem), Medium (500), Line height 1.35
-- `Question Stem`: 16px (1.0rem), Regular (400) to Medium (500), Line height 1.55 (optimized for long-reading retention)
-- `Answer Option Label`: 14px (0.875rem), Regular (400), Line height 1.45
-- `Body / Descriptions`: 14px (0.875rem), Regular (400), Line height 1.5
-- `Caption / Metadata`: 12px (0.75rem), Regular (400) to Medium (500), Line height 1.4
-- `Timer & Counters`: 18px - 22px, Bold (700), `tabular-nums`
+### Scale (Elevated for High Legibility & Long-Form Reading Retention):
+- `Display / Page Title`: 28px - 32px (1.75rem - 2.0rem), Semibold (600), Line height 1.25, tracking -0.02em
+- `Section Header / Modal Title`: 18px - 20px (1.125rem - 1.25rem), Semibold (600), Line height 1.35
+- `Question Stem`: 17px - 19px (1.0625rem - 1.1875rem), Regular (400) to Medium (500), Line height 1.65 (optimized for long-reading retention, no eye strain)
+- `Answer Option Label / Text`: 15px - 16px (0.9375rem - 1.0rem), Regular (400), Line height 1.6
+- `Body / Descriptions / Explanations`: 14px - 15px (0.875rem - 0.9375rem), Regular (400), Line height 1.6, text `#c2c8d4` / `#f4f5f7`
+- `Buttons & Interactive Controls`: 14px (0.875rem), Semibold (600)
+- `Caption / Secondary Metadata`: 12px - 13px (0.75rem - 0.8125rem), Medium (500), Line height 1.45
+- `Timer & Counters`: 18px - 24px, Bold (700), `tabular-nums`
 
 ## 4. Spacing, Elevation & Shapes
 

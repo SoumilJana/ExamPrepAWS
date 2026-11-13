@@ -83,31 +83,31 @@ export const Navigation: React.FC<NavigationProps> = ({
               onClick={() => onSelectTab('dashboard')}
               className="flex items-center space-x-2 text-left focus:outline-none group touch-manipulation shrink-0"
             >
-              <span className="font-semibold text-sm tracking-tight text-[#f4f5f7] group-hover:text-white transition-colors whitespace-nowrap">
+              <span className="font-semibold text-base sm:text-lg tracking-tight text-[#f4f5f7] group-hover:text-white transition-colors whitespace-nowrap">
                 CloudPrep
               </span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.04] text-[#9ea5b3] border border-white/[0.06] whitespace-nowrap shrink-0">
+              <span className="text-xs font-mono font-medium px-2 py-0.5 rounded bg-white/[0.04] text-[#9ea5b3] border border-white/[0.06] whitespace-nowrap shrink-0">
                 CLF-C02
               </span>
             </button>
 
             {/* Desktop Navigation Tabs: Shown on laptop & desktop (>= 1024px) */}
-            <nav className="hidden lg:flex items-center space-x-1 text-xs shrink-0">
+            <nav className="hidden lg:flex items-center space-x-1 text-sm shrink-0">
               {navItems.map((item) => {
                 const isActive = currentTab === item.id;
                 return (
                   <button
                     key={item.id}
                     onClick={() => onSelectTab(item.id)}
-                    className={`flex items-center space-x-1.5 px-2.5 xl:px-3 py-1.5 rounded-md transition-all duration-150 btn-press touch-manipulation whitespace-nowrap shrink-0 ${
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-150 btn-press touch-manipulation whitespace-nowrap shrink-0 font-medium ${
                       isActive
-                        ? 'text-[#f4f5f7] font-medium bg-white/[0.06]'
-                        : 'text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.03]'
+                        ? 'text-[#f4f5f7] bg-white/[0.08] shadow-sm'
+                        : 'text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.04]'
                     }`}
                   >
                     <span className="whitespace-nowrap">{item.label}</span>
                     {item.badge !== undefined && item.badge > 0 && (
-                      <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-[#f87171]/20 text-[#f87171] font-semibold border border-[#f87171]/30 whitespace-nowrap shrink-0">
+                      <span className="px-2 py-0.5 rounded-full font-mono text-xs bg-[#f87171]/20 text-[#f87171] font-semibold border border-[#f87171]/30 whitespace-nowrap shrink-0">
                         {item.badge}
                       </span>
                     )}
@@ -118,59 +118,59 @@ export const Navigation: React.FC<NavigationProps> = ({
           </div>
 
           {/* Right: In-Progress Indicator, Cloud Sync & Countdown Pill */}
-          <div className="flex items-center space-x-2 text-xs shrink-0 whitespace-nowrap">
+          <div className="flex items-center space-x-2 text-sm shrink-0 whitespace-nowrap">
             <button
               onClick={() => onSelectTab('settings')}
               title="Cloud Sync Active (Supabase) - Click to manage"
-              className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.04] transition-colors btn-press border border-white/[0.05] touch-manipulation whitespace-nowrap shrink-0"
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.04] transition-colors btn-press border border-white/[0.05] touch-manipulation whitespace-nowrap shrink-0"
             >
-              <Cloud className="w-3.5 h-3.5 text-[#34d399] shrink-0" />
-              <span className="hidden sm:inline text-[11px] font-mono text-[#9ea5b3] whitespace-nowrap">Synced</span>
+              <Cloud className="w-4 h-4 text-[#34d399] shrink-0" />
+              <span className="hidden sm:inline text-xs font-mono text-[#9ea5b3] whitespace-nowrap">Synced</span>
             </button>
 
             {activeExam && !activeExam.isSubmitted && (
               <button
                 onClick={() => onSelectTab('mock-exams')}
-                className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#fbbf24]/10 text-[#fbbf24] border border-[#fbbf24]/20 hover:bg-[#fbbf24]/15 transition-colors btn-press text-[11px] touch-manipulation whitespace-nowrap shrink-0"
+                className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-[#fbbf24]/10 text-[#fbbf24] border border-[#fbbf24]/20 hover:bg-[#fbbf24]/15 transition-colors btn-press text-xs font-medium touch-manipulation whitespace-nowrap shrink-0"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#fbbf24] animate-pulse shrink-0" />
+                <span className="w-2 h-2 rounded-full bg-[#fbbf24] animate-pulse shrink-0" />
                 <span className="whitespace-nowrap">
                   Resume {activeExam.title ? (activeExam.title.length > 16 ? `${activeExam.title.substring(0, 14)}...` : activeExam.title) : `#${activeExam.examNumber}`}
                 </span>
-                <ChevronRight className="w-3 h-3 shrink-0" />
+                <ChevronRight className="w-3.5 h-3.5 shrink-0" />
               </button>
             )}
 
             <div className="relative shrink-0">
               <button
                 onClick={() => setShowDatePicker(!showDatePicker)}
-                className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.04] transition-colors btn-press border border-white/[0.05] touch-manipulation whitespace-nowrap shrink-0"
+                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.04] transition-colors btn-press border border-white/[0.05] touch-manipulation whitespace-nowrap shrink-0"
               >
-                <Calendar className="w-3.5 h-3.5 text-[#6d8aff] shrink-0" />
-                <span className="tabular-nums font-mono text-[11px] whitespace-nowrap">
+                <Calendar className="w-4 h-4 text-[#6d8aff] shrink-0" />
+                <span className="tabular-nums font-mono text-xs font-semibold whitespace-nowrap">
                   {diffDays > 0 ? `${diffDays}d left` : diffDays === 0 ? 'Exam Today' : 'Done'}
                 </span>
               </button>
 
               {showDatePicker && (
-                <div className="absolute right-0 mt-2 w-64 p-3.5 bg-[#14161b] border border-white/[0.1] rounded-xl shadow-2xl z-50 card-highlight-elevated animate-in fade-in zoom-in-95 duration-150">
-                  <div className="text-[11px] text-[#9ea5b3] mb-2 font-medium">Scheduled Exam Date</div>
+                <div className="absolute right-0 mt-2 w-64 p-4 bg-[#14161b] border border-white/[0.1] rounded-xl shadow-2xl z-50 card-highlight-elevated animate-in fade-in zoom-in-95 duration-150">
+                  <div className="text-xs text-[#9ea5b3] mb-2 font-medium">Scheduled Exam Date</div>
                   <input
                     type="date"
                     value={tempDate}
                     onChange={(e) => setTempDate(e.target.value)}
-                    className="w-full px-2.5 py-1.5 bg-[#090a0e] border border-white/[0.08] rounded-md text-sm text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff] mb-3 font-mono"
+                    className="w-full px-3 py-2 bg-[#090a0e] border border-white/[0.08] rounded-md text-sm text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff] mb-3 font-mono"
                   />
                   <div className="flex justify-end space-x-2">
                     <button
                       onClick={() => setShowDatePicker(false)}
-                      className="px-2.5 py-1 text-xs text-[#9ea5b3] hover:text-[#f4f5f7]"
+                      className="px-3 py-1.5 text-xs text-[#9ea5b3] hover:text-[#f4f5f7]"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleSaveDate}
-                      className="px-3 py-1 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-xs rounded-md transition-colors btn-press"
+                      className="px-3.5 py-1.5 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-xs rounded-md transition-colors btn-press"
                     >
                       Save
                     </button>
@@ -205,12 +205,12 @@ export const Navigation: React.FC<NavigationProps> = ({
               <div className="relative">
                 <Icon className={`w-5 h-5 transition-transform duration-150 ${isActive ? 'scale-110' : ''}`} />
                 {tab.badge !== undefined && tab.badge > 0 && (
-                  <span className="absolute -top-1 -right-2 px-1.5 py-0.2 rounded-full font-mono text-[9px] font-bold bg-[#f87171] text-white">
+                  <span className="absolute -top-1 -right-2 px-1.5 py-0.2 rounded-full font-mono text-[10px] font-bold bg-[#f87171] text-white">
                     {tab.badge > 99 ? '99+' : tab.badge}
                   </span>
                 )}
               </div>
-              <span className={`text-[10px] mt-1 font-medium ${isActive ? 'text-[#f4f5f7] font-semibold' : 'text-[#7e8695]'}`}>
+              <span className={`text-xs mt-1 font-medium ${isActive ? 'text-[#f4f5f7] font-semibold' : 'text-[#9ea5b3]'}`}>
                 {tab.label}
               </span>
               {isActive && (
@@ -233,7 +233,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               <span className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-[#6d8aff]" />
             )}
           </div>
-          <span className={`text-[10px] mt-1 font-medium ${isMoreTabActive ? 'text-[#f4f5f7] font-semibold' : 'text-[#7e8695]'}`}>
+          <span className={`text-xs mt-1 font-medium ${isMoreTabActive ? 'text-[#f4f5f7] font-semibold' : 'text-[#9ea5b3]'}`}>
             More
           </span>
           {isMoreTabActive && (
@@ -257,9 +257,9 @@ export const Navigation: React.FC<NavigationProps> = ({
               </div>
               <button
                 onClick={() => setShowMobileMore(false)}
-                className="p-1 rounded-lg text-[#9ea5b3] hover:text-white"
+                className="p-1.5 rounded-lg text-[#9ea5b3] hover:text-white"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -279,12 +279,12 @@ export const Navigation: React.FC<NavigationProps> = ({
                     : 'bg-[#090a0e] border-white/[0.06] text-[#9ea5b3] active:bg-[#14161b]'
                 }`}
               >
-                <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center text-[#6d8aff]">
-                  <Database className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center text-[#6d8aff]">
+                  <Database className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-[#f4f5f7]">Question Bank</div>
-                  <div className="text-[11px] text-[#7e8695]">Search & browse all 1,050 questions</div>
+                  <div className="text-base font-medium text-[#f4f5f7]">Question Bank</div>
+                  <div className="text-xs text-[#9ea5b3]">Search & browse all 1,050 questions</div>
                 </div>
               </button>
 
@@ -299,12 +299,12 @@ export const Navigation: React.FC<NavigationProps> = ({
                     : 'bg-[#090a0e] border-white/[0.06] text-[#9ea5b3] active:bg-[#14161b]'
                 }`}
               >
-                <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center text-[#34d399]">
-                  <TrendingUp className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center text-[#34d399]">
+                  <TrendingUp className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-[#f4f5f7]">Performance Analytics</div>
-                  <div className="text-[11px] text-[#7e8695]">Domain breakdown & readiness index</div>
+                  <div className="text-base font-medium text-[#f4f5f7]">Performance Analytics</div>
+                  <div className="text-xs text-[#9ea5b3]">Domain breakdown & readiness index</div>
                 </div>
               </button>
 
@@ -319,12 +319,12 @@ export const Navigation: React.FC<NavigationProps> = ({
                     : 'bg-[#090a0e] border-white/[0.06] text-[#9ea5b3] active:bg-[#14161b]'
                 }`}
               >
-                <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center text-[#fbbf24]">
-                  <SettingsIcon className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center text-[#fbbf24]">
+                  <SettingsIcon className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-[#f4f5f7]">Settings & Cloud Sync</div>
-                  <div className="text-[11px] text-[#7e8695]">Supabase real-time sync & preferences</div>
+                  <div className="text-base font-medium text-[#f4f5f7]">Settings & Cloud Sync</div>
+                  <div className="text-xs text-[#9ea5b3]">Supabase real-time sync & preferences</div>
                 </div>
               </button>
             </div>

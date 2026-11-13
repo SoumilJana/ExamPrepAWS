@@ -79,13 +79,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
           {/* Left: Score & Factors */}
           <div className="space-y-4 max-w-xl">
             <div className="flex items-center space-x-2">
-              <span className="text-xs font-medium text-[#9ea5b3]">Exam Readiness Indicator</span>
+              <span className="text-sm font-medium text-[#9ea5b3]">Exam Readiness Indicator</span>
               <button
                 onClick={() => setShowFormulaModal(true)}
-                className="text-[#5e6573] hover:text-[#9ea5b3] transition-colors p-0.5"
+                className="text-[#5e6573] hover:text-[#9ea5b3] transition-colors p-1"
                 title="View transparent formula"
               >
-                <Info className="w-3.5 h-3.5" />
+                <Info className="w-4 h-4" />
               </button>
             </div>
 
@@ -94,7 +94,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 {readiness.score}%
               </span>
               <span
-                className={`text-xs font-medium px-2.5 py-0.5 rounded-full border ${
+                className={`text-sm font-medium px-3 py-1 rounded-full border ${
                   readiness.score >= PASSING_PERCENTAGE
                     ? 'text-[#34d399] bg-[#34d399]/10 border-[#34d399]/20'
                     : readiness.score >= 60
@@ -107,13 +107,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
 
             {/* Precision Micro-Meters */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
-              <div className="p-2.5 rounded-lg bg-[#090a0e]/70 border border-white/[0.04] space-y-1.5">
-                <div className="flex justify-between text-[#9ea5b3]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-sm">
+              <div className="p-3 rounded-lg bg-[#090a0e]/70 border border-white/[0.04] space-y-1.5">
+                <div className="flex justify-between text-xs sm:text-sm text-[#9ea5b3]">
                   <span>Recent 3 Avg</span>
-                  <span className="font-mono text-[#f4f5f7] font-medium">{readiness.recentExamsAverage}%</span>
+                  <span className="font-mono text-[#f4f5f7] font-semibold">{readiness.recentExamsAverage}%</span>
                 </div>
-                <div className="h-1 w-full bg-white/[0.06] rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
                   <div
                     className="h-full bg-[#6d8aff] rounded-full transition-all"
                     style={{ width: `${readiness.recentExamsAverage}%` }}
@@ -121,12 +121,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </div>
               </div>
 
-              <div className="p-2.5 rounded-lg bg-[#090a0e]/70 border border-white/[0.04] space-y-1.5">
-                <div className="flex justify-between text-[#9ea5b3]">
+              <div className="p-3 rounded-lg bg-[#090a0e]/70 border border-white/[0.04] space-y-1.5">
+                <div className="flex justify-between text-xs sm:text-sm text-[#9ea5b3]">
                   <span>Lowest Domain</span>
-                  <span className="font-mono text-[#f4f5f7] font-medium">{readiness.lowestDomainScore}%</span>
+                  <span className="font-mono text-[#f4f5f7] font-semibold">{readiness.lowestDomainScore}%</span>
                 </div>
-                <div className="h-1 w-full bg-white/[0.06] rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all ${
                       readiness.lowestDomainScore >= PASSING_PERCENTAGE ? 'bg-[#34d399]' : 'bg-[#f87171]'
@@ -136,12 +136,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </div>
               </div>
 
-              <div className="p-2.5 rounded-lg bg-[#090a0e]/70 border border-white/[0.04] space-y-1.5">
-                <div className="flex justify-between text-[#9ea5b3]">
+              <div className="p-3 rounded-lg bg-[#090a0e]/70 border border-white/[0.04] space-y-1.5">
+                <div className="flex justify-between text-xs sm:text-sm text-[#9ea5b3]">
                   <span>Bank Coverage</span>
-                  <span className="font-mono text-[#f4f5f7] font-medium">{readiness.questionBankCoverage}%</span>
+                  <span className="font-mono text-[#f4f5f7] font-semibold">{readiness.questionBankCoverage}%</span>
                 </div>
-                <div className="h-1 w-full bg-white/[0.06] rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
                   <div
                     className="h-full bg-[#6d8aff] rounded-full transition-all"
                     style={{ width: `${readiness.questionBankCoverage}%` }}
@@ -156,35 +156,35 @@ export const Dashboard: React.FC<DashboardProps> = ({
             {isExamResumable && activeExam ? (
               <button
                 onClick={onResumeExam}
-                className="w-full sm:w-auto px-5 py-3 rounded-xl bg-[#fbbf24] hover:bg-[#f59e0b] text-[#090a0e] text-xs font-semibold flex items-center justify-center space-x-2 transition-all duration-150 btn-press shadow-lg shadow-[#fbbf24]/10"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#fbbf24] hover:bg-[#f59e0b] text-[#090a0e] text-sm font-semibold flex items-center justify-center space-x-2 transition-all duration-150 btn-press shadow-lg shadow-[#fbbf24]/10"
               >
-                <Play className="w-3.5 h-3.5 fill-current" />
+                <Play className="w-4 h-4 fill-current" />
                 <span>Resume {activeExam.title || `Exam #${activeExam.examNumber}`} (Q{activeExam.currentQuestionIndex + 1})</span>
               </button>
             ) : (
-              <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2.5 w-full sm:w-auto">
                 <button
                   onClick={onLaunchNewExam}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] text-xs font-semibold flex items-center justify-center space-x-2 transition-all duration-150 btn-press glow-accent"
+                  className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] text-sm font-semibold flex items-center justify-center space-x-2 transition-all duration-150 btn-press glow-accent"
                 >
-                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <Play className="w-4 h-4 fill-current" />
                   <span>Start Mock Exam (65 Qs • 90m)</span>
                 </button>
                 <button
                   onClick={() => onNavigateTab('quick-sprints')}
-                  className="w-full sm:w-auto px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-[#f4f5f7] text-xs font-medium flex items-center justify-center space-x-1.5 transition-all duration-150 btn-press border border-white/[0.06]"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-[#f4f5f7] text-sm font-medium flex items-center justify-center space-x-2 transition-all duration-150 btn-press border border-white/[0.06]"
                 >
-                  <Zap className="w-3.5 h-3.5 text-[#fbbf24]" />
+                  <Zap className="w-4 h-4 text-[#fbbf24]" />
                   <span>10–15 Min Quick Sprint</span>
                 </button>
               </div>
             )}
 
-            <div className="flex items-center space-x-3 text-xs text-[#9ea5b3]">
+            <div className="flex items-center space-x-3 text-sm text-[#9ea5b3]">
               <span className="font-mono font-medium text-[#f4f5f7]">{completedExams.length}</span>
               <span>completed</span>
               <span className="text-white/20">•</span>
-              <span>Avg: <strong className="font-mono text-[#f4f5f7] font-medium">{averageScore}%</strong></span>
+              <span>Avg: <strong className="font-mono text-[#f4f5f7] font-semibold">{averageScore}%</strong></span>
               <span className="text-white/20">•</span>
               <span>{diffDays > 0 ? `${diffDays} days left` : 'Today'}</span>
             </div>
@@ -197,15 +197,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold tracking-tight text-[#f4f5f7]">Domain Accuracy</h2>
-            <p className="text-xs text-[#9ea5b3]">Cumulative performance across the four official AWS CLF-C02 domains</p>
+            <h2 className="text-base sm:text-lg font-semibold tracking-tight text-[#f4f5f7]">Domain Accuracy</h2>
+            <p className="text-sm text-[#9ea5b3] mt-0.5">Cumulative performance across the four official AWS CLF-C02 domains</p>
           </div>
           <button
             onClick={() => onNavigateTab('performance')}
-            className="text-xs text-[#6d8aff] hover:text-[#839cff] flex items-center space-x-1 transition-colors"
+            className="text-sm font-medium text-[#6d8aff] hover:text-[#839cff] flex items-center space-x-1.5 transition-colors"
           >
             <span>Detailed Analytics</span>
-            <ArrowRight className="w-3 h-3" />
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
@@ -213,22 +213,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
           {domainAverages.map((domain) => (
             <div
               key={domain.id}
-              className="p-4 bg-[#111318] border border-white/[0.06] rounded-xl card-highlight space-y-3 hover:border-white/[0.12] transition-colors"
+              className="p-4 sm:p-5 bg-[#111318] border border-white/[0.06] rounded-xl card-highlight space-y-3 hover:border-white/[0.12] transition-colors"
             >
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[#9ea5b3] font-medium">{domain.name}</span>
-                <span className="text-[10px] text-[#5e6573] font-mono px-1.5 py-0.5 rounded bg-white/[0.03]">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-[#f4f5f7] font-medium">{domain.name}</span>
+                <span className="text-xs text-[#9ea5b3] font-mono px-2 py-0.5 rounded bg-white/[0.03]">
                   {domain.weight}%
                 </span>
               </div>
 
               <div className="flex items-baseline justify-between">
-                <span className="text-2xl font-semibold font-mono text-[#f4f5f7]">
+                <span className="text-2xl sm:text-3xl font-semibold font-mono text-[#f4f5f7]">
                   {domain.percentage}%
                 </span>
                 {domain.isWeak && (
-                  <span className="text-[11px] text-[#f87171] flex items-center space-x-1 font-mono">
-                    <AlertCircle className="w-3 h-3" />
+                  <span className="text-xs text-[#f87171] flex items-center space-x-1 font-mono font-medium">
+                    <AlertCircle className="w-3.5 h-3.5" />
                     <span>&lt; 72%</span>
                   </span>
                 )}
@@ -249,26 +249,26 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* Mistake Vault Spaced Repetition Callout */}
       {activeMistakesCount > 0 && (
-        <section className="bg-[#111318] border border-[#f87171]/25 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 card-highlight">
+        <section className="bg-[#111318] border border-[#f87171]/25 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 card-highlight">
           <div className="flex items-start space-x-3.5">
             <div className="p-2.5 rounded-xl bg-[#f87171]/10 text-[#f87171] shrink-0 mt-0.5 border border-[#f87171]/20">
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-[#f4f5f7]">
+              <div className="text-sm sm:text-base font-semibold text-[#f4f5f7]">
                 {activeMistakesCount} {activeMistakesCount === 1 ? 'question' : 'questions'} quarantined in your Mistake Vault
               </div>
-              <p className="text-[11px] text-[#9ea5b3] mt-0.5">
+              <p className="text-xs sm:text-sm text-[#9ea5b3] mt-1 leading-relaxed">
                 Targeted spaced repetition. Answer each correctly twice in a row to graduate them.
               </p>
             </div>
           </div>
           <button
             onClick={() => onNavigateTab('mistake-vault')}
-            className="px-4 py-2 bg-[#f87171]/15 hover:bg-[#f87171]/25 text-[#f87171] border border-[#f87171]/30 font-semibold text-xs rounded-xl transition-colors btn-press shrink-0 flex items-center space-x-1.5"
+            className="px-5 py-2.5 bg-[#f87171]/15 hover:bg-[#f87171]/25 text-[#f87171] border border-[#f87171]/30 font-semibold text-sm rounded-xl transition-colors btn-press shrink-0 flex items-center space-x-2"
           >
             <span>Review & Drill Mistakes</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-4 h-4" />
           </button>
         </section>
       )}
@@ -277,25 +277,25 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold tracking-tight text-[#f4f5f7]">Recent Examinations</h2>
-            <p className="text-xs text-[#9ea5b3]">Review past test sessions and mistake diagnoses</p>
+            <h2 className="text-base sm:text-lg font-semibold tracking-tight text-[#f4f5f7]">Recent Examinations</h2>
+            <p className="text-sm text-[#9ea5b3] mt-0.5">Review past test sessions and mistake diagnoses</p>
           </div>
           <button
             onClick={() => onNavigateTab('mock-exams')}
-            className="text-xs text-[#6d8aff] hover:text-[#839cff] flex items-center space-x-1 transition-colors"
+            className="text-sm font-medium text-[#6d8aff] hover:text-[#839cff] flex items-center space-x-1.5 transition-colors"
           >
             <span>All mock tests ({completedExams.length})</span>
-            <ArrowRight className="w-3 h-3" />
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
         <div className="bg-[#111318] border border-white/[0.06] rounded-xl overflow-hidden card-highlight">
           {completedExams.length === 0 ? (
-            <div className="py-12 text-center text-xs text-[#9ea5b3] space-y-2">
+            <div className="py-12 text-center text-sm text-[#9ea5b3] space-y-2">
               <p>No completed examinations yet.</p>
               <button
                 onClick={onLaunchNewExam}
-                className="text-[#6d8aff] hover:underline"
+                className="text-[#6d8aff] hover:underline font-medium"
               >
                 Launch your first exam
               </button>
@@ -316,15 +316,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 return (
                   <div
                     key={exam.id}
-                    className="p-4 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
+                    className="p-4 sm:p-5 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
                   >
-                    <div className="space-y-0.5">
-                      <div className="flex items-center space-x-2.5">
-                        <span className="font-medium text-xs text-[#f4f5f7]">
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-3">
+                        <span className="font-medium text-sm sm:text-base text-[#f4f5f7]">
                           {exam.title || `Exam #${exam.examNumber}`}
                         </span>
                         <span
-                          className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
+                          className={`text-xs font-medium px-2.5 py-0.5 rounded-full border ${
                             passed
                               ? 'text-[#34d399] bg-[#34d399]/10 border-[#34d399]/20'
                               : 'text-[#f87171] bg-[#f87171]/10 border-[#f87171]/20'
@@ -333,22 +333,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           {passed ? 'Passed' : 'Failed'}
                         </span>
                       </div>
-                      <p className="text-[11px] text-[#5e6573] font-mono">{dateStr}</p>
+                      <p className="text-xs text-[#9ea5b3] font-mono">{dateStr}</p>
                     </div>
 
-                    <div className="flex items-center space-x-6 text-xs">
+                    <div className="flex items-center space-x-6 text-sm">
                       <div className="text-right">
-                        <div className="font-mono font-semibold text-[#f4f5f7]">
+                        <div className="font-mono font-semibold text-base sm:text-lg text-[#f4f5f7]">
                           {exam.result?.percentage}%
                         </div>
-                        <div className="text-[11px] text-[#5e6573] font-mono">
+                        <div className="text-xs text-[#9ea5b3] font-mono">
                           {exam.result?.correctAnswers} / {exam.result?.totalQuestions || exam.questions?.length || 65} correct
                         </div>
                       </div>
 
                       <button
                         onClick={() => onViewResults(exam)}
-                        className="px-3 py-1.5 text-xs text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.05] rounded-md transition-colors btn-press border border-white/[0.05]"
+                        className="px-3.5 py-2 text-sm text-[#9ea5b3] hover:text-[#f4f5f7] hover:bg-white/[0.05] rounded-lg transition-colors btn-press border border-white/[0.05] font-medium"
                       >
                         Review
                       </button>
@@ -364,36 +364,36 @@ export const Dashboard: React.FC<DashboardProps> = ({
       {/* Transparent Formula Dialog */}
       {showFormulaModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-150">
-          <div className="bg-[#14161b] border border-white/[0.1] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 card-highlight-elevated">
+          <div className="bg-[#14161b] border border-white/[0.1] rounded-2xl max-w-md w-full p-6 sm:p-7 shadow-2xl space-y-4 card-highlight-elevated">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
               <div className="flex items-center space-x-2">
-                <Sparkles className="w-4 h-4 text-[#6d8aff]" />
-                <h3 className="text-xs font-semibold text-[#f4f5f7]">
+                <Sparkles className="w-5 h-5 text-[#6d8aff]" />
+                <h3 className="text-base font-semibold text-[#f4f5f7]">
                   Readiness Score Breakdown
                 </h3>
               </div>
               <button
                 onClick={() => setShowFormulaModal(false)}
-                className="text-[#9ea5b3] hover:text-[#f4f5f7] text-xs"
+                className="text-[#9ea5b3] hover:text-[#f4f5f7] text-sm p-1"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-[#9ea5b3] leading-relaxed">
+            <p className="text-sm text-[#9ea5b3] leading-relaxed">
               Your readiness score is evaluated objectively using three key criteria:
             </p>
 
-            <div className="p-3 bg-[#090a0e] rounded-lg border border-white/[0.05] font-mono text-[11px] text-[#6d8aff] space-y-1">
+            <div className="p-3.5 bg-[#090a0e] rounded-xl border border-white/[0.05] font-mono text-xs sm:text-sm text-[#6d8aff] space-y-1.5 leading-relaxed">
               <div>0.50 × Recent Exam Average ({readiness.recentExamsAverage}%)</div>
               <div>+ 0.30 × Lowest Domain Score ({readiness.lowestDomainScore}%)</div>
               <div>+ 0.20 × Question Bank Coverage ({readiness.questionBankCoverage}%)</div>
             </div>
 
-            <div className="pt-2 flex justify-end">
+            <div className="pt-3 flex justify-end">
               <button
                 onClick={() => setShowFormulaModal(false)}
-                className="px-3.5 py-1.5 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-xs rounded-lg transition-colors btn-press"
+                className="px-4 py-2 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-sm rounded-lg transition-colors btn-press"
               >
                 Close
               </button>

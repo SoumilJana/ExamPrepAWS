@@ -120,77 +120,77 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 space-y-8 animate-in fade-in duration-150 text-xs">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 space-y-8 animate-in fade-in duration-150 text-sm">
       
       {/* Header */}
       <div className="pb-4 border-b border-white/[0.06]">
-        <h1 className="text-xl sm:text-2xl font-semibold text-[#f4f5f7] tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[#f4f5f7] tracking-tight">
           Settings & Cloud Sync
         </h1>
-        <p className="text-[#9ea5b3] mt-0.5">
+        <p className="text-sm text-[#9ea5b3] mt-1">
           Exam timeline, device pairing, and Supabase synchronization
         </p>
       </div>
 
       {/* Cloud Sync Section */}
-      <div className="bg-[#111318] border border-white/[0.07] rounded-2xl p-6 space-y-5 card-highlight">
+      <div className="bg-[#111318] border border-white/[0.07] rounded-2xl p-6 sm:p-7 space-y-5 card-highlight">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="p-2 rounded-xl bg-[#6d8aff]/10 border border-[#6d8aff]/20 text-[#6d8aff]">
-              <Cloud className="w-4 h-4" />
+          <div className="flex items-center space-x-3">
+            <div className="p-2.5 rounded-xl bg-[#6d8aff]/10 border border-[#6d8aff]/20 text-[#6d8aff]">
+              <Cloud className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-xs font-semibold text-[#f4f5f7]">Cross-Device Cloud Sync</h2>
-              <p className="text-[11px] text-[#9ea5b3]">Powered by Supabase PostgreSQL (Realtime)</p>
+              <h2 className="text-base font-semibold text-[#f4f5f7]">Cross-Device Cloud Sync</h2>
+              <p className="text-xs sm:text-sm text-[#9ea5b3]">Powered by Supabase PostgreSQL (Realtime)</p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#34d399]/10 text-[#34d399] border border-[#34d399]/20 font-mono text-[10px]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-pulse" />
+          <div className="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#34d399]/10 text-[#34d399] border border-[#34d399]/20 font-mono text-xs font-medium">
+            <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse" />
             <span>Connected</span>
           </div>
         </div>
 
-        <div className="space-y-3 pt-1">
-          <div className="space-y-1">
-            <label className="text-[#9ea5b3]">Your Sync Profile Key</label>
+        <div className="space-y-3.5 pt-1">
+          <div className="space-y-1.5">
+            <label className="text-sm text-[#9ea5b3] font-medium">Your Sync Profile Key</label>
             <div className="flex items-center space-x-2">
               <input
                 type="text"
                 value={syncKeyInput}
                 onChange={(e) => setSyncKeyInput(e.target.value)}
                 placeholder="e.g. soumil-prep"
-                className="flex-1 px-3 py-2 bg-[#090a0e] border border-white/[0.08] rounded-xl text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff] font-mono text-xs"
+                className="flex-1 px-3.5 py-2.5 bg-[#090a0e] border border-white/[0.08] rounded-xl text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff] font-mono text-sm"
               />
               <button
                 onClick={handleUpdateSyncKey}
                 disabled={isSyncing}
-                className="px-3.5 py-2 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] rounded-xl transition-colors btn-press border border-white/[0.06] shrink-0"
+                className="px-4 py-2.5 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] font-semibold text-sm rounded-xl transition-colors btn-press border border-white/[0.06] shrink-0"
               >
                 Set Key
               </button>
             </div>
-            <p className="text-[11px] text-[#5e6573]">
+            <p className="text-xs text-[#9ea5b3]">
               Use this key to pair your phone and laptop so your exam history stays in sync.
             </p>
           </div>
 
           {/* Quick Actions for Sync */}
-          <div className="flex flex-wrap items-center gap-2.5 pt-2 border-t border-white/[0.04]">
+          <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-white/[0.04]">
             <button
               onClick={handleCopyPhoneLink}
-              className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-[#6d8aff]/10 hover:bg-[#6d8aff]/15 text-[#6d8aff] border border-[#6d8aff]/20 rounded-lg transition-colors btn-press"
+              className="flex items-center space-x-2 px-4 py-2 bg-[#6d8aff]/10 hover:bg-[#6d8aff]/15 text-[#6d8aff] border border-[#6d8aff]/20 rounded-xl transition-colors btn-press font-semibold text-sm"
             >
-              {hasCopiedPhoneLink ? <Check className="w-3.5 h-3.5 text-[#34d399]" /> : <Copy className="w-3.5 h-3.5" />}
+              {hasCopiedPhoneLink ? <Check className="w-4 h-4 text-[#34d399]" /> : <Copy className="w-4 h-4" />}
               <span>{hasCopiedPhoneLink ? 'Link Copied!' : 'Copy Phone Link'}</span>
             </button>
 
             <button
               onClick={handleManualSync}
               disabled={isSyncing}
-              className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-white/[0.06] hover:bg-white/[0.1] text-[#f4f5f7] rounded-lg transition-colors btn-press border border-white/[0.06]"
+              className="flex items-center space-x-2 px-4 py-2 bg-white/[0.06] hover:bg-white/[0.1] text-[#f4f5f7] rounded-xl transition-colors btn-press border border-white/[0.06] font-medium text-sm"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-[#6d8aff]' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin text-[#6d8aff]' : ''}`} />
               <span>{isSyncing ? 'Syncing...' : 'Sync Now'}</span>
             </button>
           </div>
@@ -198,22 +198,22 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* Target Parameters */}
-      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 space-y-4 card-highlight">
-        <h2 className="text-xs font-semibold text-[#f4f5f7]">Exam Target</h2>
+      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 sm:p-7 space-y-4 card-highlight">
+        <h2 className="text-base font-semibold text-[#f4f5f7]">Exam Target</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <label className="text-[#9ea5b3]">Scheduled Exam Date</label>
+          <div className="space-y-1.5">
+            <label className="text-sm text-[#9ea5b3] font-medium">Scheduled Exam Date</label>
             <input
               type="date"
               value={targetDate}
               onChange={(e) => setTargetDate(e.target.value)}
-              className="w-full px-3 py-2 bg-[#090a0e] border border-white/[0.07] rounded-lg text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff] font-mono text-xs"
+              className="w-full px-3.5 py-2.5 bg-[#090a0e] border border-white/[0.07] rounded-xl text-[#f4f5f7] focus:outline-none focus:border-[#6d8aff] font-mono text-sm"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[#9ea5b3]">Target Score: <span className="font-mono text-[#f4f5f7]">{targetScore}%</span></label>
+          <div className="space-y-1.5">
+            <label className="text-sm text-[#9ea5b3] font-medium">Target Score: <span className="font-mono text-[#f4f5f7] font-semibold">{targetScore}%</span></label>
             <input
               type="range"
               min="70"
@@ -228,36 +228,36 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* Preferences */}
-      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 space-y-3 card-highlight">
-        <h2 className="text-xs font-semibold text-[#f4f5f7]">Exam Preferences</h2>
+      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 sm:p-7 space-y-4 card-highlight">
+        <h2 className="text-base font-semibold text-[#f4f5f7]">Exam Preferences</h2>
 
-        <div className="space-y-2.5 pt-1 text-[#9ea5b3]">
-          <label className="flex items-center space-x-2.5 cursor-pointer">
+        <div className="space-y-3 pt-1 text-sm text-[#9ea5b3]">
+          <label className="flex items-center space-x-3 cursor-pointer">
             <input
               type="checkbox"
               checked={warning15}
               onChange={(e) => setWarning15(e.target.checked)}
-              className="rounded bg-[#090a0e] border-white/[0.1] accent-[#6d8aff]"
+              className="w-4 h-4 rounded bg-[#090a0e] border-white/[0.1] accent-[#6d8aff]"
             />
             <span className="text-[#f4f5f7]">15-minute remaining amber alert</span>
           </label>
 
-          <label className="flex items-center space-x-2.5 cursor-pointer">
+          <label className="flex items-center space-x-3 cursor-pointer">
             <input
               type="checkbox"
               checked={warning5}
               onChange={(e) => setWarning5(e.target.checked)}
-              className="rounded bg-[#090a0e] border-white/[0.1] accent-[#6d8aff]"
+              className="w-4 h-4 rounded bg-[#090a0e] border-white/[0.1] accent-[#6d8aff]"
             />
             <span className="text-[#f4f5f7]">5-minute urgent red alert</span>
           </label>
 
-          <label className="flex items-center space-x-2.5 cursor-pointer">
+          <label className="flex items-center space-x-3 cursor-pointer">
             <input
               type="checkbox"
               checked={shortcuts}
               onChange={(e) => setShortcuts(e.target.checked)}
-              className="rounded bg-[#090a0e] border-white/[0.1] accent-[#6d8aff]"
+              className="w-4 h-4 rounded bg-[#090a0e] border-white/[0.1] accent-[#6d8aff]"
             />
             <span className="text-[#f4f5f7]">Enable keyboard shortcuts (← / → for nav, 1-4 for options, F to flag)</span>
           </label>
@@ -266,7 +266,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         <div className="pt-2 flex justify-end">
           <button
             onClick={handleSavePreferences}
-            className="px-4 py-1.5 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold rounded-lg transition-colors btn-press shadow-md shadow-[#6d8aff]/15"
+            className="px-5 py-2.5 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-sm rounded-xl transition-colors btn-press shadow-md shadow-[#6d8aff]/15"
           >
             Save Preferences
           </button>
@@ -274,23 +274,23 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* Local Backups */}
-      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 space-y-3 card-highlight">
-        <h2 className="text-xs font-semibold text-[#f4f5f7]">Manual Backups</h2>
-        <p className="text-[#9ea5b3]">
+      <div className="bg-[#111318] border border-white/[0.06] rounded-2xl p-6 sm:p-7 space-y-4 card-highlight">
+        <h2 className="text-base font-semibold text-[#f4f5f7]">Manual Backups</h2>
+        <p className="text-sm text-[#9ea5b3] leading-relaxed">
           All exam data is automatically synced with Supabase and cached locally in your browser.
         </p>
 
-        <div className="flex flex-wrap gap-2.5 pt-2">
+        <div className="flex flex-wrap gap-3 pt-2">
           <button
             onClick={handleExportData}
-            className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] rounded-lg transition-colors btn-press border border-white/[0.06]"
+            className="flex items-center space-x-2 px-4 py-2 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] font-medium text-sm rounded-xl transition-colors btn-press border border-white/[0.06]"
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download className="w-4 h-4" />
             <span>Export JSON</span>
           </button>
 
-          <label className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] rounded-lg cursor-pointer transition-colors btn-press border border-white/[0.06]">
-            <Upload className="w-3.5 h-3.5" />
+          <label className="flex items-center space-x-2 px-4 py-2 bg-white/[0.08] hover:bg-white/[0.12] text-[#f4f5f7] font-medium text-sm rounded-xl cursor-pointer transition-colors btn-press border border-white/[0.06]">
+            <Upload className="w-4 h-4" />
             <span>Import JSON</span>
             <input
               type="file"
@@ -302,9 +302,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
           <button
             onClick={handleReset}
-            className="flex items-center space-x-1.5 px-3.5 py-1.5 text-[#f87171] hover:bg-[#f87171]/10 rounded-lg transition-colors ml-auto btn-press"
+            className="flex items-center space-x-2 px-4 py-2 text-[#f87171] hover:bg-[#f87171]/10 rounded-xl transition-colors ml-auto btn-press font-medium text-sm"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-4 h-4" />
             <span>Clear Local History</span>
           </button>
         </div>

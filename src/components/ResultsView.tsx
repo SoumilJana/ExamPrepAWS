@@ -55,18 +55,18 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
       <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
         <button
           onClick={onBackToDashboard}
-          className="flex items-center space-x-1.5 text-xs text-[#9ea5b3] hover:text-[#f4f5f7] transition-colors py-1"
+          className="flex items-center space-x-2 text-sm text-[#9ea5b3] hover:text-[#f4f5f7] transition-colors py-1.5 font-medium"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-4 h-4" />
           <span>Dashboard</span>
         </button>
 
         <div className="flex items-center space-x-3">
           <button
             onClick={onRetakeExam}
-            className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] text-xs font-semibold transition-colors btn-press shadow-md shadow-[#6d8aff]/15"
+            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] text-sm font-semibold transition-colors btn-press shadow-md shadow-[#6d8aff]/15"
           >
-            <RotateCcw className="w-3 h-3" />
+            <RotateCcw className="w-3.5 h-3.5" />
             <span>Retake Exam</span>
           </button>
         </div>
@@ -75,16 +75,16 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
       {/* Outcome Summary */}
       <div className="bg-[#111318] border border-white/[0.07] rounded-2xl p-6 sm:p-8 space-y-6 card-highlight">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-          <div className="space-y-1">
-            <div className="text-xs text-[#9ea5b3]">
+          <div className="space-y-1.5">
+            <div className="text-sm text-[#9ea5b3]">
               {session.title || `Exam #${session.examNumber}`} Result
             </div>
-            <div className="flex items-baseline space-x-3">
-              <span className="text-4xl sm:text-5xl font-mono font-semibold text-[#f4f5f7]">
+            <div className="flex items-baseline space-x-4">
+              <span className="text-5xl sm:text-6xl font-mono font-semibold text-[#f4f5f7]">
                 {result.percentage}%
               </span>
               <span
-                className={`text-xs font-medium px-2.5 py-0.5 rounded-full border ${
+                className={`text-sm font-semibold px-3 py-1 rounded-full border ${
                   passed
                     ? 'text-[#34d399] bg-[#34d399]/10 border-[#34d399]/20'
                     : 'text-[#f87171] bg-[#f87171]/10 border-[#f87171]/20'
@@ -95,12 +95,12 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center space-x-6 text-xs text-[#9ea5b3] font-mono">
+          <div className="flex items-center space-x-6 text-sm text-[#9ea5b3] font-mono">
             <div>
-              <span className="text-[#34d399] font-semibold">{result.correctAnswers}</span> / {result.totalQuestions} correct
+              <span className="text-[#34d399] font-bold">{result.correctAnswers}</span> / {result.totalQuestions} correct
             </div>
             <div>
-              <span className="text-[#f87171] font-semibold">{result.incorrectAnswers}</span> incorrect
+              <span className="text-[#f87171] font-bold">{result.incorrectAnswers}</span> incorrect
             </div>
             <div>
               <span className="text-[#f4f5f7]">{timeMinutes}m {timeSeconds}s</span> spent
@@ -113,12 +113,12 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
           {result.domainScores.map((ds) => {
             const isDomainPassed = ds.percentage >= PASSING_PERCENTAGE;
             return (
-              <div key={ds.domainId} className="space-y-1.5 text-xs">
+              <div key={ds.domainId} className="space-y-1.5 text-sm">
                 <div className="flex justify-between text-[#9ea5b3]">
-                  <span>{ds.domainName}</span>
-                  <span className="font-mono text-[#f4f5f7]">{ds.correct}/{ds.total} ({ds.percentage}%)</span>
+                  <span className="font-medium text-[#f4f5f7]">{ds.domainName}</span>
+                  <span className="font-mono text-[#f4f5f7] font-semibold">{ds.correct}/{ds.total} ({ds.percentage}%)</span>
                 </div>
-                <div className="h-1.5 w-full bg-[#090a0e] rounded-full overflow-hidden">
+                <div className="h-2 w-full bg-[#090a0e] rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${isDomainPassed ? 'bg-[#34d399]' : 'bg-[#f87171]'}`}
                     style={{ width: `${ds.percentage}%` }}
@@ -131,7 +131,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
       </div>
 
       {/* Review Filter Tabs */}
-      <div className="flex flex-wrap items-center gap-2 text-xs border-b border-white/[0.06] pb-3">
+      <div className="flex flex-wrap items-center gap-2 text-sm border-b border-white/[0.06] pb-3">
         {(['all', 'incorrect', 'correct', 'unanswered', 'flagged'] as FilterTab[]).map((tab) => {
           const count =
             tab === 'all'
@@ -150,9 +150,9 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
             <button
               key={tab}
               onClick={() => setActiveFilter(tab)}
-              className={`px-3 py-1.5 rounded-lg transition-colors capitalize btn-press ${
+              className={`px-3.5 py-2 rounded-xl transition-colors capitalize font-medium btn-press ${
                 isActive
-                  ? 'bg-white/[0.08] text-[#f4f5f7] font-medium border border-white/[0.06]'
+                  ? 'bg-white/[0.08] text-[#f4f5f7] border border-white/[0.06]'
                   : 'text-[#9ea5b3] hover:text-[#f4f5f7]'
               }`}
             >
@@ -177,13 +177,13 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
           return (
             <div
               key={q.id}
-              className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 sm:p-6 space-y-4 card-highlight"
+              className="bg-[#111318] border border-white/[0.06] rounded-2xl p-5 sm:p-7 space-y-4 card-highlight"
             >
-              <div className="flex items-center justify-between text-xs text-[#9ea5b3]">
+              <div className="flex items-center justify-between text-sm text-[#9ea5b3]">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-[#f4f5f7]">Q{originalIndex + 1}</span>
+                  <span className="font-mono text-[#6d8aff] font-bold">Q{originalIndex + 1}</span>
                   <span className="text-white/20">•</span>
-                  <span>{domain.name}</span>
+                  <span className="font-medium text-[#f4f5f7]">{domain.name}</span>
                   {q.tags && q.tags.length > 0 && (
                     <>
                       <span className="text-white/20">•</span>
@@ -191,7 +191,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                         {q.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="px-1.5 py-0.5 rounded text-[10px] bg-white/[0.04] text-[#9ea5b3] border border-white/[0.06]"
+                            className="px-2 py-0.5 rounded text-xs bg-white/[0.04] text-[#9ea5b3] border border-white/[0.06]"
                           >
                             {tag}
                           </span>
@@ -203,7 +203,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
 
                 <div className="flex items-center space-x-3">
                   <span
-                    className={`font-medium ${
+                    className={`font-semibold ${
                       isCorrect
                         ? 'text-[#34d399]'
                         : isUnanswered
@@ -216,19 +216,19 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
 
                   <button
                     onClick={() => toggleExplanation(q.id)}
-                    className="text-[#5e6573] hover:text-[#9ea5b3]"
+                    className="text-[#5e6573] hover:text-[#9ea5b3] p-1"
                   >
-                    {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              <div className="text-sm text-[#f4f5f7] leading-relaxed">
+              <div className="text-base sm:text-lg leading-[1.65] font-normal text-[#f4f5f7]">
                 {q.questionText}
               </div>
 
               {/* Options */}
-              <div className="space-y-1.5 pt-1 text-xs">
+              <div className="space-y-2 pt-1 text-sm sm:text-base">
                 {q.options.map((opt) => {
                   const isUserChoice = userAns.includes(opt.id);
                   const isCorrectChoice = q.correctOptionIds.includes(opt.id);
@@ -243,17 +243,21 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                   return (
                     <div
                       key={opt.id}
-                      className={`p-3 rounded-xl border flex items-start space-x-3 ${borderStyle}`}
+                      className={`p-3.5 sm:p-4 rounded-xl border flex items-start space-x-3.5 ${borderStyle}`}
                     >
-                      <span className="font-mono font-medium shrink-0 mt-0.5">
+                      <span className="font-mono font-bold shrink-0 mt-0.5">
                         {opt.id}.
                       </span>
-                      <span className="flex-1">{opt.text}</span>
+                      <span className="flex-1 leading-relaxed">{opt.text}</span>
                       {isCorrectChoice && (
-                        <span className="text-[#34d399] text-[11px] font-medium shrink-0">Correct Key</span>
+                        <span className="text-[#34d399] text-xs font-semibold px-2 py-0.5 rounded bg-[#34d399]/10 border border-[#34d399]/20 shrink-0">
+                          Correct Key
+                        </span>
                       )}
                       {isUserChoice && !isCorrectChoice && (
-                        <span className="text-[#f87171] text-[11px] font-medium shrink-0">Your Answer</span>
+                        <span className="text-[#f87171] text-xs font-semibold px-2 py-0.5 rounded bg-[#f87171]/10 border border-[#f87171]/20 shrink-0">
+                          Your Answer
+                        </span>
                       )}
                     </div>
                   );
@@ -262,13 +266,13 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
 
               {/* Technical Explanation */}
               {isExpanded && (
-                <div className="mt-3 pt-3 border-t border-white/[0.06] text-xs space-y-1.5 text-[#9ea5b3]">
-                  <div className="text-[#f4f5f7] font-medium text-[11px]">Architecture Rationale</div>
-                  <p className="leading-relaxed text-[#9ea5b3]">
+                <div className="mt-4 pt-4 border-t border-white/[0.06] text-sm sm:text-[15px] space-y-2 text-[#9ea5b3]">
+                  <div className="text-[#f4f5f7] font-semibold text-sm sm:text-base">Architecture Rationale</div>
+                  <p className="leading-relaxed text-[#c2c8d4]">
                     {q.explanation}
                   </p>
                   {q.awsReference && (
-                    <p className="text-[11px] text-[#5e6573] pt-0.5">
+                    <p className="text-xs sm:text-sm text-[#9ea5b3] pt-1 font-mono">
                       Reference: <span className="text-[#6d8aff]">{q.awsReference}</span>
                     </p>
                   )}

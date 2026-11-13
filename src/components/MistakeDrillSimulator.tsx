@@ -39,25 +39,25 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
             <Sparkles className="w-6 h-6" />
           </div>
 
-          <div className="space-y-1.5">
-            <h2 className="text-xl font-semibold text-[#f4f5f7]">Drill Complete!</h2>
-            <p className="text-xs text-[#9ea5b3]">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold text-[#f4f5f7]">Drill Complete!</h2>
+            <p className="text-sm text-[#9ea5b3]">
               Spaced repetition practice strengthens long-term memory.
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 py-2 border-y border-white/[0.06] text-center">
+          <div className="grid grid-cols-3 gap-3 py-3 border-y border-white/[0.06] text-center">
             <div>
-              <div className="text-xs text-[#9ea5b3]">Reviewed</div>
-              <div className="text-xl font-mono font-semibold text-[#f4f5f7] mt-0.5">{totalAnswered}</div>
+              <div className="text-xs sm:text-sm text-[#9ea5b3]">Reviewed</div>
+              <div className="text-2xl font-mono font-semibold text-[#f4f5f7] mt-0.5">{totalAnswered}</div>
             </div>
             <div>
-              <div className="text-xs text-[#9ea5b3]">Correct</div>
-              <div className="text-xl font-mono font-semibold text-[#34d399] mt-0.5">{correctCount}</div>
+              <div className="text-xs sm:text-sm text-[#9ea5b3]">Correct</div>
+              <div className="text-2xl font-mono font-semibold text-[#34d399] mt-0.5">{correctCount}</div>
             </div>
             <div>
-              <div className="text-xs text-[#9ea5b3]">Graduated</div>
-              <div className="text-xl font-mono font-semibold text-[#6d8aff] mt-0.5">{newlyMastered}</div>
+              <div className="text-xs sm:text-sm text-[#9ea5b3]">Graduated</div>
+              <div className="text-2xl font-mono font-semibold text-[#6d8aff] mt-0.5">{newlyMastered}</div>
             </div>
           </div>
 
@@ -67,7 +67,7 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
                 onDrillComplete();
                 onExitDrill();
               }}
-              className="w-full py-2.5 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-xs rounded-xl transition-colors btn-press shadow-md shadow-[#6d8aff]/15"
+              className="w-full py-3 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-sm rounded-xl transition-colors btn-press shadow-md shadow-[#6d8aff]/15"
             >
               Back to Mistake Vault
             </button>
@@ -136,17 +136,17 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
       
       {/* Top Header */}
       <header className="border-b border-white/[0.06] bg-[#111318]/90 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <span className="text-xs font-semibold text-[#f4f5f7]">Mistake Vault Drill</span>
-            <span className="text-[11px] font-mono text-[#9ea5b3]">
+            <span className="text-sm sm:text-base font-semibold text-[#f4f5f7]">Mistake Vault Drill</span>
+            <span className="text-xs sm:text-sm font-mono text-[#9ea5b3]">
               Question {currentIndex + 1} of {questions.length}
             </span>
           </div>
 
           <div className="flex items-center space-x-4">
             {/* Progress bar */}
-            <div className="w-24 sm:w-36 h-1.5 bg-white/[0.06] rounded-full overflow-hidden hidden sm:block">
+            <div className="w-24 sm:w-36 h-2 bg-white/[0.06] rounded-full overflow-hidden hidden sm:block">
               <div
                 className="h-full bg-[#6d8aff] transition-all duration-300"
                 style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
@@ -155,10 +155,10 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
 
             <button
               onClick={onExitDrill}
-              className="text-[#9ea5b3] hover:text-[#f4f5f7] p-1.5 hover:bg-white/[0.05] rounded-lg transition-colors"
+              className="text-[#9ea5b3] hover:text-[#f4f5f7] p-2 hover:bg-white/[0.05] rounded-lg transition-colors"
               title="Exit Drill"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -171,20 +171,20 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
         <div className="bg-[#111318] border border-white/[0.07] rounded-2xl p-6 sm:p-8 space-y-6 card-highlight">
           
           {/* Metadata Row */}
-          <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/[0.05] text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/[0.05] text-sm">
             <div className="flex items-center space-x-2 text-[#9ea5b3]">
-              <span className="font-mono text-[#6d8aff] font-medium">{currentQ.id}</span>
+              <span className="font-mono text-[#6d8aff] font-semibold">{currentQ.id}</span>
               <span>•</span>
-              <span>{domain.name}</span>
+              <span className="text-[#f4f5f7] font-medium">{domain.name}</span>
               <span>•</span>
-              <span>{isMulti ? `Select ${targetCount}` : 'Single Choice'}</span>
+              <span className="text-[#6d8aff]">{isMulti ? `Select ${targetCount}` : 'Single Choice'}</span>
             </div>
 
             {/* Streak Indicator */}
-            <div className="flex items-center space-x-1.5 font-mono text-[11px]">
+            <div className="flex items-center space-x-2 font-mono text-xs sm:text-sm">
               <span className="text-[#9ea5b3]">Mastery Streak:</span>
               <span
-                className={`px-2 py-0.5 rounded-full font-medium border ${
+                className={`px-2.5 py-0.5 rounded-full font-semibold border ${
                   currentStreak === 0
                     ? 'bg-white/[0.04] text-[#9ea5b3] border-white/[0.08]'
                     : currentStreak === 1
@@ -198,12 +198,12 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
           </div>
 
           {/* Question Text */}
-          <div className="text-sm sm:text-base font-normal text-[#f4f5f7] leading-relaxed">
+          <div className="text-base sm:text-lg lg:text-[19px] font-normal text-[#f4f5f7] leading-[1.65]">
             {currentQ.questionText}
           </div>
 
           {/* Options */}
-          <div className="space-y-2 pt-2 text-xs">
+          <div className="space-y-3 pt-2">
             {currentQ.options.map((opt) => {
               const isSelected = selectedOptionIds.includes(opt.id);
               const isCorrectKey = currentQ.correctOptionIds.includes(opt.id);
@@ -226,23 +226,23 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
                 <div
                   key={opt.id}
                   onClick={() => handleSelectOption(opt.id)}
-                  className={`p-3.5 rounded-xl border flex items-start space-x-3 cursor-pointer transition-all btn-press touch-manipulation min-h-[48px] ${style}`}
+                  className={`p-4 sm:p-5 rounded-xl border flex items-start space-x-3.5 sm:space-x-4 cursor-pointer transition-all btn-press touch-manipulation min-h-[52px] ${style}`}
                 >
                   <span
-                    className={`font-mono font-medium shrink-0 w-5 h-5 rounded flex items-center justify-center text-[11px] ${
+                    className={`font-mono font-bold shrink-0 w-6 h-6 rounded-lg flex items-center justify-center text-xs sm:text-sm mt-0.5 border ${
                       isSelected
-                        ? 'bg-[#6d8aff] text-[#090a0e]'
-                        : 'bg-white/[0.05] text-[#9ea5b3]'
+                        ? 'bg-[#6d8aff] text-[#090a0e] border-[#6d8aff]'
+                        : 'bg-white/[0.05] text-[#9ea5b3] border-white/[0.08]'
                     }`}
                   >
                     {opt.id}
                   </span>
-                  <span className="flex-1 leading-relaxed mt-0.5">{opt.text}</span>
+                  <span className="flex-1 text-sm sm:text-base leading-relaxed mt-0.5">{opt.text}</span>
                   {hasCheckedAnswer && isCorrectKey && (
-                    <CheckCircle2 className="w-4 h-4 text-[#34d399] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-[#34d399] shrink-0 mt-0.5" />
                   )}
                   {hasCheckedAnswer && isSelected && !isCorrectKey && (
-                    <XCircle className="w-4 h-4 text-[#f87171] shrink-0 mt-0.5" />
+                    <XCircle className="w-5 h-5 text-[#f87171] shrink-0 mt-0.5" />
                   )}
                 </div>
               );
@@ -255,7 +255,7 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
               <button
                 onClick={handleCheckAnswer}
                 disabled={selectedOptionIds.length === 0}
-                className="w-full sm:w-auto sm:ml-auto px-6 py-2.5 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-xs rounded-xl transition-colors disabled:opacity-30 disabled:pointer-events-none btn-press shadow-md shadow-[#6d8aff]/15 touch-manipulation min-h-[44px]"
+                className="w-full sm:w-auto sm:ml-auto px-7 py-3 bg-[#6d8aff] hover:bg-[#839cff] text-[#090a0e] font-semibold text-sm rounded-xl transition-colors disabled:opacity-30 disabled:pointer-events-none btn-press shadow-md shadow-[#6d8aff]/15 touch-manipulation min-h-[46px]"
               >
                 Check Answer
               </button>
@@ -263,12 +263,12 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
               <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                 <div className="flex items-center space-x-2">
                   {isCurrentCorrect ? (
-                    <div className="flex items-center space-x-1.5 text-xs text-[#34d399] font-medium">
+                    <div className="flex items-center space-x-2 text-sm text-[#34d399] font-semibold">
                       <CheckCircle2 className="w-4 h-4" />
                       <span>Correct! Streak updated.</span>
                     </div>
                   ) : (
-                    <div className="flex items-center space-x-1.5 text-xs text-[#f87171] font-medium">
+                    <div className="flex items-center space-x-2 text-sm text-[#f87171] font-semibold">
                       <AlertCircle className="w-4 h-4" />
                       <span>Incorrect. Streak reset to 0.</span>
                     </div>
@@ -277,7 +277,7 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
 
                 <button
                   onClick={handleNext}
-                  className="flex items-center justify-center space-x-1.5 px-6 py-2.5 bg-[#f4f5f7] hover:bg-white text-[#090a0e] font-semibold text-xs rounded-xl transition-colors btn-press shadow-md shadow-white/10 touch-manipulation min-h-[44px]"
+                  className="flex items-center justify-center space-x-2 px-7 py-3 bg-[#f4f5f7] hover:bg-white text-[#090a0e] font-semibold text-sm rounded-xl transition-colors btn-press shadow-md shadow-white/10 touch-manipulation min-h-[46px]"
                 >
                   <span>{currentIndex + 1 < questions.length ? 'Next Question' : 'View Summary'}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -288,13 +288,13 @@ export const MistakeDrillSimulator: React.FC<MistakeDrillSimulatorProps> = ({
 
           {/* Instant Explanation on Check */}
           {hasCheckedAnswer && (
-            <div className="pt-4 border-t border-white/[0.06] space-y-2 text-xs text-[#9ea5b3] animate-in fade-in duration-200">
-              <div className="font-semibold text-[#f4f5f7]">Architecture Rationale</div>
-              <p className="leading-relaxed whitespace-pre-line text-[#9ea5b3]">
+            <div className="pt-5 border-t border-white/[0.06] space-y-2.5 text-sm sm:text-[15px] animate-in fade-in duration-200">
+              <div className="font-semibold text-base text-[#f4f5f7]">Architecture Rationale</div>
+              <p className="leading-relaxed whitespace-pre-line text-[#c2c8d4]">
                 {currentQ.explanation}
               </p>
               {currentQ.awsReference && (
-                <div className="text-[11px] text-[#5e6573] pt-1 font-mono">
+                <div className="text-xs sm:text-sm text-[#9ea5b3] pt-1 font-mono">
                   Reference: <span className="text-[#6d8aff]">{currentQ.awsReference}</span>
                 </div>
               )}
